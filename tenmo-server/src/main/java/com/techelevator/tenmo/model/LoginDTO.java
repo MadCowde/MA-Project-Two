@@ -1,11 +1,12 @@
 package com.techelevator.tenmo.model;
+
 /*
     The acronym DTO is being used for "data transfer object". It means that this type of class is specifically
     created to transfer data between the client and the server. For example, LoginDto represents the data a client
     must pass to the server for a login endpoint, and LoginResponseDto represents the object that's returned from the server
     to the client from a login endpoint.
  */
-public class LoginDto {
+public class LoginDTO {
 
    private String username;
    private String password;
@@ -29,8 +30,8 @@ public class LoginDto {
    @Override
    public String toString() {
       return "LoginDto{" +
-              "username='" + username + '\'' +
-              ", password='" + password + '\'' +
-              '}';
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            '}';
    }
 }
