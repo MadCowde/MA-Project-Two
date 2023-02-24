@@ -1,10 +1,7 @@
 package com.techelevator.tenmo.controller;
 
 import javax.validation.Valid;
-
-import com.techelevator.tenmo.model.LoginResponseDto;
-import com.techelevator.tenmo.model.RegisterUserDto;
-
+import com.techelevator.tenmo.model.RegisterUserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,9 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.LoginDto;
+import com.techelevator.tenmo.model.LoginDTO;
+import com.techelevator.tenmo.model.LoginResponseDTO;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,7 +36,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@Valid @RequestBody LoginDto loginDto) {
+    public LoginResponseDTO login(@Valid @RequestBody LoginDTO loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(), loginDto.getPassword());
@@ -50,12 +47,12 @@ public class AuthenticationController {
 
         User user = userDao.findByUsername(loginDto.getUsername());
 
-        return new LoginResponseDto(jwt, user);
+        return new LoginResponseDTO(jwt, user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public void register(@Valid @RequestBody RegisterUserDto newUser) {
+    public void register(@Valid @RequestBody RegisterUserDTO newUser) {
         if (!userDao.create(newUser.getUsername(), newUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
         }
