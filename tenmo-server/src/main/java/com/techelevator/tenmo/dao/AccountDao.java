@@ -6,7 +6,7 @@ import com.techelevator.tenmo.model.Account;
 
 public interface AccountDao {
 
-    List<Account> findAll();
+    List<Account> listAll();
 
     Account get(int id);
 

@@ -1,0 +1,6 @@
+2023-02-23T21:53:47.1737953 401 : [no body]
+2023-02-23T21:53:52.8841626 500 : [{"timestamp":"2023-02-24T02:53:52.880+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
+2023-02-23T21:58:35.532999 500 : [{"timestamp":"2023-02-24T02:58:35.501+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
+2023-02-23T21:59:07.2008875 500 : [{"timestamp":"2023-02-24T02:59:07.172+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
+2023-02-23T22:00:19.4011115 500 : [{"timestamp":"2023-02-24T03:00:19.366+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
+2023-02-23T22:02:23.2809814 500 : [{"timestamp":"2023-02-24T03:02:23.248+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
