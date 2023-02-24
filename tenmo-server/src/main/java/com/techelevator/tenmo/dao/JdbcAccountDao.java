@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.model.Account;
@@ -15,14 +16,21 @@ import com.techelevator.tenmo.model.Account;
 public class JdbcAccountDao implements AccountDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Account> listAccById(int id) {
-        return null;
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT * FROM account WHERE user_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+        while (result.next()) {
+            accounts.add(mapRowToAccount(result));
+        }
+        return accounts;
     }
 
     @Override
@@ -45,10 +53,11 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public boolean create(int newUserId) {
-        String sql = "INSERT INTO account(user_id, balance) values(?, ?) RETURNING account_id";
+        String sql = "INSERT INTO account (user_id, balance) values (?, ?);";
         try {
-            int acc = jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
+            jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
         } catch (DataAccessException e) {
+            System.out.println("update didn't work.");
             return false;
         }
         return true;
@@ -60,6 +69,13 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "SELECT * FROM account";
         acc = jdbcTemplate.queryForList(sql, Account.class);
         return acc;
+    }
+
+    private Account mapRowToAccount(SqlRowSet result) {
+        Account account = new Account(result.getInt("account_id"), result.getInt("user_id"),
+                result.getBigDecimal("balance"));
+        return account;
+
     }
 
 }

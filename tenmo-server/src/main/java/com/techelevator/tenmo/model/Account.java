@@ -7,9 +7,9 @@ public class Account {
     int user_Id;
     BigDecimal balance;
 
-    public Account(int accId, int userId, BigDecimal balance) {
-        this.account_Id = accId;
-        this.user_Id = userId;
+    public Account(int account_Id, int user_Id, BigDecimal balance) {
+        this.account_Id = account_Id;
+        this.user_Id = user_Id;
         this.balance = balance;
     }
 

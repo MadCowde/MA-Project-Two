@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.User;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -13,7 +15,9 @@ import java.util.List;
 @Component
 public class JdbcUserDao implements UserDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     JdbcAccountDao accDao = new JdbcAccountDao(new JdbcTemplate());
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
@@ -78,12 +82,12 @@ public class JdbcUserDao implements UserDao {
     public boolean create(String username, String password) {
 
         // create user
-        String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETURNING user_id";
+        String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETURNING user_id;";
         String password_hash = new BCryptPasswordEncoder().encode(password);
-        Integer newUserId;
-        newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
+        int newUserId = -1;
+        newUserId = jdbcTemplate.queryForObject(sql, int.class, username, password_hash);
 
-        if (newUserId == null)
+        if (newUserId == -1)
             return false;
 
         // create account
