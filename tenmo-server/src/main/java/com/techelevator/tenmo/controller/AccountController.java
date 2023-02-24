@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.model.Account;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 //@PreAuthorize("isAuthenticated()")
 @RequestMapping("/accounts")
 public class AccountController {
-
     @Autowired
     JdbcAccountDao accDao = new JdbcAccountDao(new JdbcTemplate());
 
