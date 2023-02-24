@@ -23,16 +23,6 @@ public class JdbcAccountDao implements AccountDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Account> listAccById(int id) {
-        List<Account> accounts = new ArrayList<>();
-        String sql = "SELECT * FROM account WHERE user_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
-        while (result.next()) {
-            accounts.add(mapRowToAccount(result));
-        }
-        return accounts;
-    }
-
     @Override
     public boolean remove(int id) {
         String sql = "SELECT * FROM account where account_id = ?";
@@ -47,8 +37,12 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public Account get(int id) {
         String sql = "SELECT * FROM account where account_id = ?";
-        Account acc = jdbcTemplate.queryForObject(sql, Account.class, id);
-        return acc;
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, id);
+        if (rs.next()) {
+            return new Account(rs.getInt("account_id"), rs.getInt("user_id"), rs.getBigDecimal("balance"));
+        }
+        return null;
+
     }
 
     @Override
@@ -64,10 +58,27 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
+    public Account create(Account acc) {
+        String sql = "INSERT INTO account (user_id, balance) values (?, ?) RETURNING account_id;";
+        try {
+            int id = jdbcTemplate.update(sql, acc.getUser_Id(), STARTING_BALANCE);
+            acc.setAccount_Id(id);
+        } catch (DataAccessException e) {
+            System.out.println("update didn't work.");
+            return null;
+        }
+        return acc;
+    }
+
+    @Override
     public List<Account> listAll() {
         List<Account> acc = new ArrayList<>();
         String sql = "SELECT * FROM account";
-        acc = jdbcTemplate.queryForList(sql, Account.class);
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(sql);
+        while (rs.next()) {
+            acc.add(new Account(rs.getInt("account_id"), rs.getInt("user_id"), rs.getBigDecimal("balance")));
+        }
+
         return acc;
     }
 

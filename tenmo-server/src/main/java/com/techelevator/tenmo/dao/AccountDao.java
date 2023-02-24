@@ -12,7 +12,7 @@ public interface AccountDao {
 
     boolean remove(int id);
 
-    List<Account> listAccById(int id);
-
     boolean create(int userId);
+
+    public Account create(Account acc);
 }
