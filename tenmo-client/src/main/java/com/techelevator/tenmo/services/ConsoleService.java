@@ -89,7 +89,7 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void printCurrentBalance(Principal principal){
+    public void printCurrentBalance(){
         principal.getName();
     }
 

@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,17 @@ public class AccountController {
         Account acc = accDao.get(account_Id);
 
         return acc;
+    }
+    @GetMapping("/{id}")
+    public Account getByUserId(@PathVariable int id) {
+        //API to get user by user_id
+        Account acc = accDao.getById(id);
+        if(acc == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found.");
+        } else {
+            return acc;
+        }
+
     }
 
     @GetMapping("")
