@@ -1,14 +1,17 @@
 package com.techelevator.tenmo.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.model.Account;
 
+@Component
 public class JdbcAccountDao implements AccountDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
@@ -42,9 +45,9 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public boolean create(int newUserId) {
-        String sql = "INSERT INTO account (user_id, balance) values(?, ?)";
+        String sql = "INSERT INTO account(user_id, balance) values(?, ?) RETURNING account_id";
         try {
-            jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
+            int acc = jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
         } catch (DataAccessException e) {
             return false;
         }
@@ -52,8 +55,11 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public List<Account> findAll() {
-        return null;
+    public List<Account> listAll() {
+        List<Account> acc = new ArrayList<>();
+        String sql = "SELECT * FROM account";
+        acc = jdbcTemplate.queryForList(sql, Account.class);
+        return acc;
     }
 
 }
