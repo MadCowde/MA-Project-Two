@@ -1,23 +1,20 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class JdbcUserDao implements UserDao {
 
-    private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
     private final JdbcTemplate jdbcTemplate;
+    JdbcAccountDao accDao = new JdbcAccountDao(new JdbcTemplate());
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,11 +22,13 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public int findIdByUsername(String username) {
-        if (username == null) throw new IllegalArgumentException("Username cannot be null");
+        if (username == null)
+            throw new IllegalArgumentException("Username cannot be null");
 
         int userId;
         try {
-            userId = jdbcTemplate.queryForObject("SELECT user_id FROM tenmo_user WHERE username = ?", int.class, username);
+            userId = jdbcTemplate.queryForObject("SELECT user_id FROM tenmo_user WHERE username = ?", int.class,
+                    username);
         } catch (NullPointerException | EmptyResultDataAccessException e) {
             throw new UsernameNotFoundException("User " + username + " was not found.");
         }
@@ -64,7 +63,8 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public User findByUsername(String username) {
-        if (username == null) throw new IllegalArgumentException("Username cannot be null");
+        if (username == null)
+            throw new IllegalArgumentException("Username cannot be null");
 
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username = ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
@@ -83,15 +83,11 @@ public class JdbcUserDao implements UserDao {
         Integer newUserId;
         newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
 
-        if (newUserId == null) return false;
+        if (newUserId == null)
+            return false;
 
         // create account
-        sql = "INSERT INTO account (user_id, balance) values(?, ?)";
-        try {
-            jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
-        } catch (DataAccessException e) {
-            return false;
-        }
+        accDao.create(newUserId);
 
         return true;
     }
