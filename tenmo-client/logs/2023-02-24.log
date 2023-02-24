@@ -5,3 +5,4 @@
 2023-02-24T00:09:27.532974 500 : [{"timestamp":"2023-02-24T05:09:27.531+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
 2023-02-24T00:15:54.4853212 500 : [{"timestamp":"2023-02-24T05:15:54.452+00:00","status":500,"error":"Internal Server Error","message":"Cannot invoke \"org.springframework.jdbc.core.JdbcTemplate.update(String, Object[])\" because \"this.jdbcTemplate\" is null","path":"/register"}]
 2023-02-24T00:19:47.1283923 500 : [{"timestamp":"2023-02-24T05:19:47.093+00:00","status":500,"error":"Internal Server Error","message":"No DataSource set","path":"/register"}]
+2023-02-24T00:17:43.4555384 401 : [no body]
