@@ -1,14 +1,23 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.util.BasicLogger;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
-
+    private AccountService acc = new AccountService();
     private final Scanner scanner = new Scanner(System.in);
 
     public int promptForMenuSelection(String prompt) {
@@ -89,8 +98,25 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void printCurrentBalance(){
-        principal.getName();
+    public void printCurrentBalance(int id){
+      //Goal of this method is to use accountservice to return the balance with the user_id.
+
+        System.out.println("The account balance is : " +
+        acc.getBalance(id));
     }
 
-}
+    public void printTransferHistory(int accountId){
+        //Goal of this function is print the Transfer history to the console
+      Transfer[] transfersList = acc.getTransferHistory(accountId);
+        for (Transfer transactions : transfersList){
+            System.out.println(transactions.getTransferFrom() + " has paid " + transactions.getTransferTo()
+                    + "\n $:" + transactions.getTransferAmount());
+
+            }
+
+        }
+
+    }
+
+
+

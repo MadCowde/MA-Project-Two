@@ -33,17 +33,18 @@ public class AccountController {
 
         return acc;
     }
-    @GetMapping("/{id}")
-    public Account getByUserId(@PathVariable int id) {
-        //API to get user by user_id
-        Account acc = accDao.getById(id);
-        if(acc == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found.");
-        } else {
-            return acc;
-        }
 
-    }
+//    @GetMapping("/{id}")
+//    public Account getByUserId(@PathVariable int id) {
+//        //API to get user by user_id
+//        Account acc = accDao.getById(id);
+//        if(acc == null){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found.");
+//        } else {
+//            return acc;
+//        }
+
+//    }
 
     @GetMapping("")
     public List<Account> allAccounts() {

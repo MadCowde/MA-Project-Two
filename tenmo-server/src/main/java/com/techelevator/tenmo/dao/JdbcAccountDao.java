@@ -44,22 +44,22 @@ public class JdbcAccountDao implements AccountDao {
         return null;
 
     }
+
     //@Override
-    public Account getById(int id) {
-        //Potentially need to use the User name from principal to find an ID > getBalance on front end
-        Account account = null;
-        String sql = "SELECT account.account_id, account.user_id, account.balance FROM tenmo_user\n" +
-                "JOIN account ON account.user_id = tenmo_user.user_id\n" +
-                "WHERE tenmo_user.user_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
-
-        if (result.next()){
-            account = mapRowToAccount(result);
-        }
-        return account;
-
-
-    }
+//    public Account getById(int id) {
+//        //Potentially need to use the User name from principal to find an ID > getBalance on front end
+//        Account account = null;
+//        String sql = "SELECT account.account_id, account.user_id, account.balance FROM tenmo_user\n" +
+//                "JOIN account ON account.user_id = tenmo_user.user_id\n" +
+//                "WHERE tenmo_user.user_id = ?;";
+//        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+//
+//        if (result.next()){
+//            account = mapRowToAccount(result);
+//        }
+//        return account;
+//
+ //   }
 
     @Override
     public boolean create(int newUserId) {
