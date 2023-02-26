@@ -18,17 +18,11 @@ public class TestingDatabaseConfig {
 
     // To use an existing PostgreSQL database, set the following environment variables.
     // Otherwise, a temporary database will be created on the local machine.
-    private static final String DB_HOST =
-            Objects.requireNonNullElse(System.getenv("DB_HOST"), "localhost");
-    private static final String DB_PORT =
-            Objects.requireNonNullElse(System.getenv("DB_PORT"), "5432");
-    private static final String DB_NAME =
-            Objects.requireNonNullElse(System.getenv("DB_NAME"), "TestTenmo");
-    private static final String DB_USER =
-            Objects.requireNonNullElse(System.getenv("DB_USER"), "postgres");
-    private static final String DB_PASSWORD =
-            Objects.requireNonNullElse(System.getenv("DB_PASSWORD"), "postgres1");
-
+    private static final String DB_HOST = Objects.requireNonNullElse(System.getenv("DB_HOST"), "localhost");
+    private static final String DB_PORT = Objects.requireNonNullElse(System.getenv("DB_PORT"), "5432");
+    private static final String DB_NAME = Objects.requireNonNullElse(System.getenv("DB_NAME"), "Tenmo");
+    private static final String DB_USER = Objects.requireNonNullElse(System.getenv("DB_USER"), "postgres");
+    private static final String DB_PASSWORD = Objects.requireNonNullElse(System.getenv("DB_PASSWORD"), "postgres1");
 
     private SingleConnectionDataSource adminDataSource;
     private JdbcTemplate adminJdbcTemplate;

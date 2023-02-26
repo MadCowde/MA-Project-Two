@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,15 +19,15 @@ import com.techelevator.tenmo.model.User;
 @RestController
 public class UserController {
     @Autowired
-    JdbcUserDao userDao = new JdbcUserDao(new JdbcTemplate());
+    JdbcUserDao userDao;
 
     @GetMapping("")
     public List<User> list() {
-        return userDao.findAll();
+        return userDao.findAll("Pull");
     }
 
-    @GetMapping("/{id}")
-    public User get(@RequestParam int id) {
-        return userDao.getUserById(id);
+    @GetMapping("{input}")
+    public User get(@PathVariable String input) {
+        return userDao.getUser(input);
     }
 }

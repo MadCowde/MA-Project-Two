@@ -1,34 +1,33 @@
 package com.techelevator.tenmo.controller;
 
-import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.List;
+
+import javax.sql.DataSource;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.model.Account;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 //@PreAuthorize("isAuthenticated()")
 @RequestMapping("/accounts")
 public class AccountController {
     @Autowired
-    JdbcAccountDao accDao = new JdbcAccountDao(new JdbcTemplate());
+    JdbcAccountDao accDao = new JdbcAccountDao();
 
     //@PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @GetMapping("/{account_Id}")
-    public Account get(Principal princ, @PathVariable int account_Id) {
-        Account acc = accDao.get(account_Id);
+    @GetMapping("{input}")
+    public Account get(@PathVariable String input) {
+        Account acc = accDao.get(input);
 
         return acc;
     }

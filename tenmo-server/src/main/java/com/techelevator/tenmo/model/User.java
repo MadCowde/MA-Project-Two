@@ -1,10 +1,18 @@
 package com.techelevator.tenmo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.techelevator.tenmo.dao.JdbcUserDao;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.sql.DataSource;
+import javax.validation.Valid;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class User {
 
@@ -16,13 +24,20 @@ public class User {
    private boolean activated;
    private Set<Authority> authorities = new HashSet<>();
 
-   public User() { }
+   JdbcUserDao userDao = new JdbcUserDao();
+
+   public User() {
+   }
 
    public User(int id, String username, String password, String authorities) {
+      userDao.create(username, password);
       this.id = id;
       this.username = username;
       this.password = password;
-      if(authorities != null) this.setAuthorities(authorities);
+      if (authorities != null)
+         this.setAuthorities(authorities);
+      else
+         this.setAuthorities("USER");
       this.activated = true;
    }
 
@@ -68,21 +83,28 @@ public class User {
 
    public void setAuthorities(String authorities) {
       String[] roles = authorities.split(",");
-      for(String role : roles) {
+      for (String role : roles) {
          this.authorities.add(new Authority("ROLE_" + role));
       }
    }
 
    @Override
    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o)
+         return true;
+      if (o == null || this.getClass() != o.getClass())
+         return false;
       User user = (User) o;
-      return id == user.id &&
-              activated == user.activated &&
-              Objects.equals(username, user.username) &&
-              Objects.equals(password, user.password) &&
-              Objects.equals(authorities, user.authorities);
+      return this.id == user.id &&
+            this.activated == user.activated &&
+            Objects.equals(this.username, user.username) &&
+            (Objects.equals(this.password, user.getPassword())
+                  || new BCryptPasswordEncoder().matches(user.getPassword(), this.password)
+                  || new BCryptPasswordEncoder()
+                        .matches(this.getPassword(),
+                              user.password))
+            &&
+            (this.authorities.equals(user.authorities));
    }
 
    @Override
@@ -93,10 +115,10 @@ public class User {
    @Override
    public String toString() {
       return "User{" +
-              "id=" + id +
-              ", username='" + username + '\'' +
-              ", activated=" + activated +
-              ", authorities=" + authorities +
-              '}';
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", activated=" + activated +
+            ", authorities=" + authorities +
+            '}';
    }
 }

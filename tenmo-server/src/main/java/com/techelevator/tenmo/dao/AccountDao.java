@@ -8,9 +8,7 @@ public interface AccountDao {
 
     List<Account> listAll();
 
-    Account get(int id);
-
-    boolean remove(int id);
+    Account get(String username);
 
     boolean create(int userId);
 
