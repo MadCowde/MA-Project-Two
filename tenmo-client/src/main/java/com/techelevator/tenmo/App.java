@@ -7,6 +7,8 @@ import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 
+import java.security.Principal;
+
 public class App {
 
     private static final String API_BASE_URL = "http://localhost:8080/";
@@ -89,12 +91,14 @@ public class App {
 
     private void viewCurrentBalance() {
         // TODO Auto-generated method stub
-
+        consoleService.printCurrentBalance(currentUser.getUser().getId());
     }
 
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
 
+        //Need a way to grab the accountId to find transfer history.
+      //  consoleService.printTransferHistory();
     }
 
     private void viewPendingRequests() {

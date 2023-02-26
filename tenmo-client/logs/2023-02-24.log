@@ -11,5 +11,12 @@
 =======
 2023-02-24T00:17:43.4555384 401 : [no body]
 >>>>>>> 1a860f2ec87d1887e85edb5c75934b27bbe77a5c
+<<<<<<< HEAD
 2023-02-24T13:04:25.7333355 500 : [{"timestamp":"2023-02-24T18:04:25.684+00:00","status":500,"error":"Internal Server Error","message":"Cannot invoke \"com.techelevator.tenmo.dao.JdbcAccountDao.create(int)\" because \"this.accDao\" is null","path":"/register"}]
 2023-02-24T13:32:42.7285638 500 : [{"timestamp":"2023-02-24T18:32:42.704+00:00","status":500,"error":"Internal Server Error","message":"PreparedStatementCallback; SQL [INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETU... (531 bytes)]
+=======
+2023-02-24T02:51:11.9916452 401 : [no body]
+2023-02-24T02:55:43.4890567 401 : [no body]
+2023-02-24T02:59:00.1590688 401 : [no body]
+2023-02-24T03:00:24.8101093 401 : [no body]
+>>>>>>> dda836d88ee8760c6344ec6da0b5188dd9ec4666
