@@ -1,8 +1,6 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.User;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -17,12 +15,13 @@ import java.util.Objects;
 public class JdbcUserDao implements UserDao {
     private static List<User> users = new ArrayList<>();
     private final String USER = "USER";
+
     private JdbcTemplate jd;
-    @Autowired
+
     JdbcAccountDao accDao = new JdbcAccountDao();
 
-    public JdbcUserDao(JdbcTemplate jt) {
-        this.jd = jt;
+    public JdbcUserDao(JdbcTemplate jd) {
+        this.jd = jd;
     }
 
     public JdbcUserDao() {

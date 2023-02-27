@@ -1,7 +1,5 @@
 package com.techelevator.tenmo.dao;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 

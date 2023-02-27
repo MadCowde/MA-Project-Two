@@ -21,7 +21,7 @@ import com.techelevator.tenmo.model.Account;
 //@PreAuthorize("isAuthenticated()")
 @RequestMapping("/accounts")
 public class AccountController {
-    @Autowired
+
     JdbcAccountDao accDao = new JdbcAccountDao();
 
     //@PreAuthorize("hasAnyRole('ADMIN','USER')")

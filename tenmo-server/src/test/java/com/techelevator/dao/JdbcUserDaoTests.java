@@ -4,19 +4,17 @@ import com.techelevator.tenmo.dao.Data;
 import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.model.User;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.List;
-import java.util.Objects;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
     protected static final User USER_1 = new User(1001, "user1", "user1", "USER");
@@ -27,15 +25,15 @@ public class JdbcUserDaoTests extends BaseDaoTests {
 
     @Before
     public void setup() {
-        JdbcTemplate jdbcTemplate = new Data().getJdbcTemplate();
-        sut = new JdbcUserDao(jdbcTemplate);
+        sut = new JdbcUserDao();
     }
 
     @AfterEach
+    @AfterAll
     public void shutdown() {
         JdbcTemplate jd = new Data().getJdbcTemplate();
-        jd.update("DELETE FROM account");
-        jd.update("DELETE FROM tenmo_user");
+        jd.update("DELETE FROM account;");
+        jd.update("DELETE FROM tenmo_user;");
         jd.update("alter sequence seq_account_id  restart with 2001;");
         jd.update("alter sequence seq_user_id  restart with 1001;");
 
