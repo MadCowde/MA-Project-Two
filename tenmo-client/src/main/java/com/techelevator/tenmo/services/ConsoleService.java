@@ -102,17 +102,45 @@ public class ConsoleService {
       //Goal of this method is to use accountservice to return the balance with the user_id.
 
         System.out.println("The account balance is : " +
-        acc.getBalance(id));
+        acc.getAccount(id).getBalance());
     }
 
-    public void printTransferHistory(int accountId){
+    public void printTransferHistory(int currentUserId){
         //Goal of this function is print the Transfer history to the console
-      Transfer[] transfersList = acc.getTransferHistory(accountId);
+      Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         for (Transfer transactions : transfersList){
             System.out.println(transactions.getTransferFrom() + " has paid " + transactions.getTransferTo()
                     + "\n $:" + transactions.getTransferAmount());
 
             }
+
+        }
+
+        public void printPendingRequests(int currentUserId){
+        //Goal of this function is print the pending requests to the console
+            Transfer[] pendingList = acc.getPendingRequests(currentUserId);
+
+            for (Transfer pending : pendingList){
+                System.out.println("The transfer to " + pending.getTransferTo() + " from " + pending.getTransferFrom() + " is " + pending.getTransferStatus());
+            }
+
+        }
+
+        public void sendMoneyRequest(int currentUserId){
+         //Basic functionality : Pull current user ID. Prompt for user to send money to
+            int userTo = promptForInt("Please enter the user_id you are sending money to");
+            int userFrom = currentUserId;
+            BigDecimal amount = promptForBigDecimal("How much would you like to send?");
+            acc.sendMoney(userTo, userFrom, amount);
+
+        }
+
+        public void requestMoneyFrom(int currentUserId){
+        int userRequesting = currentUserId;
+        int userFrom = promptForInt("Please enter the user_id you are requesting money from");
+        BigDecimal amount = promptForBigDecimal("How much would you like to request?");
+
+        acc.requestMoney(userRequesting, userFrom, amount);
 
         }
 

@@ -96,24 +96,22 @@ public class App {
 
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
-
-        //Need a way to grab the accountId to find transfer history.
-      //  consoleService.printTransferHistory();
+       consoleService.printTransferHistory(currentUser.getUser().getId());
     }
 
     private void viewPendingRequests() {
         // TODO Auto-generated method stub
-
+        consoleService.printPendingRequests(currentUser.getUser().getId());
     }
 
     private void sendBucks() {
         // TODO Auto-generated method stub
-
+        consoleService.sendMoneyRequest(currentUser.getUser().getId());
     }
 
     private void requestBucks() {
         // TODO Auto-generated method stub
-
+        consoleService.requestMoneyFrom(currentUser.getUser().getId());
     }
 
 }
