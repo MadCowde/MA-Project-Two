@@ -6,12 +6,6 @@ import com.techelevator.tenmo.dao.JdbcUserDao;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.sql.DataSource;
-import javax.validation.Valid;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class User {
