@@ -2,11 +2,10 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.util.BasicLogger;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +18,8 @@ public class AccountService {
     public static final String API_BASE_URL = "http://localhost:8080/";
 
     private RestTemplate restTemplate = new RestTemplate();
+
+    private TransferService transferService = new TransferService();
 
     private String authToken = null;
 
@@ -40,21 +41,7 @@ public class AccountService {
        return account;
 
     }
-   public int findUserId(String name){
-        //Goal of this function is to use principal getName to find a user_id on API. Optional functionality to search for userID/account by String
-        String url = API_BASE_URL + ""; // Need to confirm the end point
 
-        int userId = 0;
-
-        try {
-            ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), int.class);
-            userId = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-        }
-
-        return userId;
-    }
 
       public Transfer[] getTransferHistory(int currentUserId){
         Account account = getAccount(currentUserId);
@@ -101,30 +88,32 @@ public class AccountService {
       public void sendMoney(int sendTo, int sentFrom, BigDecimal amountToSend){
         Account receiving = getAccount(sendTo);
         Account sending = getAccount(sentFrom);
-        BigDecimal add = receiving.getBalance().add(amountToSend);
-        BigDecimal subtract = sending.getBalance().subtract(amountToSend);
 
-        //Need to post these objects to database after the pending request has been approved.
-        receiving.setBalance(add);
-        sending.setBalance(subtract);
+        /*Question to myself : If we post a transfer type does it
+           automatically create an object with the serial SQL creates? */
 
-        //Need to be able to set the status of the request to pending and the person who receives the money has to accept it.
+        TransferType senderType = transferService.postTransferType("Sending");
+
+        TransferStatus receiverStatus = transferService.postTransferStatus("Pending");
+
+        transferService.postTransferRequest(senderType.getTransfer_type_id(), receiverStatus.getTransfer_status_id(),
+                receiving.getAccount_Id(), sending.getAccount_Id(), amountToSend);
 
 
-      }
+    }
 
       public void requestMoney(int userRequesting , int userRequested , BigDecimal amountToRequest){
         Account request = getAccount(userRequesting);
-        Account requesting = getAccount(userRequested);
+        Account requested = getAccount(userRequested);
 
-        BigDecimal add = request.getBalance().add(amountToRequest);
-        BigDecimal subtract = requesting.getBalance().subtract(amountToRequest);
+        /*Question to myself : If we post a transfer type does it
+           automatically create an object with the serial SQL creates? */
 
-        //Need to post these objects to database after the pending request has been approved
-        request.setBalance(add);
-        requesting.setBalance(subtract);
+        TransferType requestType = transferService.postTransferType("Requesting");
+        TransferStatus requestedStatus = transferService.postTransferStatus("Pending");
 
-        //Need to be able to set the status of the request to pending until the person who is receiving the request approves it.
+        transferService.postTransferRequest(requestType.getTransfer_type_id(), requestedStatus.getTransfer_status_id(),
+                request.getAccount_Id(), requested.getAccount_Id(), amountToRequest );
 
 
       }
@@ -136,4 +125,23 @@ public class AccountService {
         headers.setBearerAuth(authToken);
         return new HttpEntity<>(headers);
     }
+
+
+
+    public int findUserId(String username){
+        // Optional functionality to search for userID/account by String
+        String url = API_BASE_URL + ""; // Need to confirm the end point
+
+        int userId = 0;
+
+        try {
+            ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), int.class);
+            userId = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+        return userId;
+    }
+
 }

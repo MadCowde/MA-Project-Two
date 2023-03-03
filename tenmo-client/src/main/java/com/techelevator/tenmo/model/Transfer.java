@@ -1,75 +1,28 @@
 package com.techelevator.tenmo.model;
 
+import java.math.BigDecimal;
+
 public class Transfer {
 
-    private int transferId;
+    private int transfer_id;
 
-    private String transferType;
+    private int transfer_type_id;
 
-    private String transferStatus;
+    private int transfer_status_id;
 
-    private String transferTo;
+    private int account_from;
 
-    private String transferFrom;
+    private int account_to;
 
-    private String transferAmount;
+    private BigDecimal transferAmount;
 
     public Transfer(){};
 
-    public Transfer(int transferId, String transferType, String transferStatus, String transferTo, String transferFrom, String transferAmount) {
-        this.transferId = transferId;
-        this.transferType = transferType;
-        this.transferStatus = transferStatus;
-        this.transferTo = transferTo;
-        this.transferFrom = transferFrom;
-        this.transferAmount = transferAmount;
-    }
-
-    public int getTransferId() {
-        return transferId;
-    }
-
-    public void setTransferId(int transferId) {
-        this.transferId = transferId;
-    }
-
-    public String getTransferType() {
-        return transferType;
-    }
-
-    public void setTransferType(String transferType) {
-        this.transferType = transferType;
-    }
-
-    public String getTransferStatus() {
-        return transferStatus;
-    }
-
-    public void setTransferStatus(String transferStatus) {
-        this.transferStatus = transferStatus;
-    }
-
-    public String getTransferTo() {
-        return transferTo;
-    }
-
-    public void setTransferTo(String transferTo) {
-        this.transferTo = transferTo;
-    }
-
-    public String getTransferFrom() {
-        return transferFrom;
-    }
-
-    public void setTransferFrom(String transferFrom) {
-        this.transferFrom = transferFrom;
-    }
-
-    public String getTransferAmount() {
-        return transferAmount;
-    }
-
-    public void setTransferAmount(String transferAmount) {
+    public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal transferAmount) {
+        this.transfer_type_id = transfer_type_id;
+        this.transfer_status_id = transfer_status_id;
+        this.account_from = account_from;
+        this.account_to = account_to;
         this.transferAmount = transferAmount;
     }
 }
