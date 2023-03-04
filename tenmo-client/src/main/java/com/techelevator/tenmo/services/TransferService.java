@@ -3,9 +3,13 @@ package com.techelevator.tenmo.services;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.util.BasicLogger;
+import io.cucumber.core.resource.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -29,13 +33,17 @@ public class TransferService {
         Transfer newTransfer = new Transfer(transferType,
                 transferTo, transferFrom, amountToTransfer);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<Transfer> entity = new HttpEntity<>(newTransfer, headers);
+        HttpEntity<Transfer> entity = makeEntity(newTransfer);
 
-        Transfer transferPost = restTemplate.postForObject(API_BASE_URL, entity, Transfer.class);
+        Transfer transferPost = null;
+        try {
+            transferPost = restTemplate.postForObject(API_BASE_URL, entity, Transfer.class);
+        } catch (RestClientResponseException ex){
+            BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex){
+            BasicLogger.log(ex.getMessage());
+        }
 
         return transferPost;
 
@@ -72,7 +80,11 @@ public class TransferService {
     }
 
 
-
+    private HttpEntity<Transfer> makeEntity(Transfer transfer) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(transfer, headers);
+    }
 
 
 }
