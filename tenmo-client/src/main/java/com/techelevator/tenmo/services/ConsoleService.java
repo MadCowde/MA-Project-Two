@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.util.BasicLogger;
@@ -98,11 +99,11 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void printCurrentBalance(int id){
+    public void printCurrentBalance(int userId){
       //Goal of this method is to use accountservice to return the balance with the user_id.
-
+        Account account = acc.getAccount(userId);
         System.out.println("The account balance is : " +
-        acc.getAccount(id).getBalance());
+        account.getBalance());
     }
 
     public void printTransferHistory(int currentUserId){
