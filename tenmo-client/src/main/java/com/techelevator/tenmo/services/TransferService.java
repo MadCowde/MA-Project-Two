@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.tenmo.model.TransferType;
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 
 public class TransferService {
 
-    public static final String API_BASE_URL = "http://localhost:8080/transfers";
+    public static final String API_BASE_URL = "http://localhost:8080/";
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -29,11 +30,11 @@ public class TransferService {
 
     public boolean postTransferRequest(Transfer newTransfer){
 
-        HttpEntity<Transfer> entity = makeEntity(newTransfer);
+        HttpEntity<Object> entity = makeEntity(newTransfer);
 
         boolean transferPost = false;
         try {
-            transferPost = restTemplate.postForObject(API_BASE_URL, entity, boolean.class);
+            transferPost = restTemplate.postForObject(API_BASE_URL + "transfers", entity, boolean.class);
         } catch (RestClientResponseException ex){
             BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
         } catch (ResourceAccessException ex){
@@ -45,40 +46,69 @@ public class TransferService {
 
     }
 
-    public TransferStatus postTransferStatus(String status){
-        TransferStatus newStatus = new TransferStatus(status);
+    public void updateBalance(Account account){
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Object> entity = makeEntity(account);
 
-        HttpEntity<TransferStatus> entity = new HttpEntity<>(newStatus, headers);
+        try{
+            restTemplate.put(API_BASE_URL + "accounts/" + account.getAccount_Id(), entity);
 
-        TransferStatus postStatus = restTemplate.postForObject(API_BASE_URL, entity, TransferStatus.class);
-
-        return postStatus;
-    }
-
-    public TransferType postTransferType(String type){
-        TransferType newType = new TransferType(type);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<TransferType> entity = new HttpEntity<>(newType, headers);
-
-        TransferType postType = restTemplate.postForObject(API_BASE_URL, entity, TransferType.class);
-
-        return postType;
+        } catch (RestClientResponseException ex){
+        BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex){
+        BasicLogger.log(ex.getMessage());
+         }
 
     }
 
+    public void processTransfer(Account receiving, Account sending, BigDecimal amount, boolean toTransfer){
 
-    private HttpEntity<Transfer> makeEntity(Transfer transfer) {
+        if(toTransfer) {
+            BigDecimal sendingBalanceUpdate = sending.getBalance().subtract(amount);
+            BigDecimal receiveBalanceUpdate = receiving.getBalance().add(amount);
+            receiving.setBalance(receiveBalanceUpdate);
+            sending.setBalance(sendingBalanceUpdate);
+            updateBalance(receiving);
+            updateBalance(sending);
+        }
+
+
+    }
+
+//    public TransferStatus postTransferStatus(String status){
+//        TransferStatus newStatus = new TransferStatus(status);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(authToken);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//        HttpEntity<TransferStatus> entity = new HttpEntity<>(newStatus, headers);
+//
+//        TransferStatus postStatus = restTemplate.postForObject(API_BASE_URL, entity, TransferStatus.class);
+//
+//        return postStatus;
+//    }
+//
+//    public TransferType postTransferType(String type){
+//        TransferType newType = new TransferType(type);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(authToken);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//        HttpEntity<TransferType> entity = new HttpEntity<>(newType, headers);
+//
+//        TransferType postType = restTemplate.postForObject(API_BASE_URL, entity, TransferType.class);
+//
+//        return postType;
+//
+//    }
+
+
+    private HttpEntity<Object> makeEntity(Object object) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity<>(transfer, headers);
+        return new HttpEntity<>(object, headers);
     }
 
 

@@ -1,9 +1,6 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferType;
-import com.techelevator.tenmo.model.TransferStatus;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
@@ -43,12 +40,27 @@ public class AccountService {
 
     }
 
+    public User[] getAllUsers(){
+        User[] listOfUsers = null;
+        String url = API_BASE_URL+ "users";
+
+        try{
+            ResponseEntity<User[]> response = restTemplate.exchange(url,
+                    HttpMethod.GET, makeAuthEntity(),User[].class);
+            listOfUsers = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e){
+            BasicLogger.log(e.getMessage());
+        }
+
+        return listOfUsers;
+    }
+
 
       public Transfer[] getTransferHistory(int currentUserId){
         Account account = getAccount(currentUserId);
 
         Transfer[] history = null;
-        String url = API_BASE_URL +"" + account.getAccount_Id(); // Need to confirm the end point to pull the data.
+        String url = API_BASE_URL + "transfers/" ; // Need to confirm the end point to pull the data.
 
         try {
             ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
@@ -70,7 +82,7 @@ public class AccountService {
           Account account = getAccount(currentUserId);
 
             Transfer[] pending = null;
-            String url = API_BASE_URL + "" + account.getAccount_Id(); //Need to confirm the end point to get
+            String url = API_BASE_URL + "transfers/" + account.getAccount_Id() + "/pending"; //Need to confirm the end point to get
 
           try {
               ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
@@ -87,24 +99,43 @@ public class AccountService {
       }
 
       public void sendMoney(int sendTo, int sentFrom, BigDecimal amountToSend){
-        Account receiving = getAccount(sendTo);
-        Account sending = getAccount(sentFrom);
+
+               Account receiving = getAccount(sendTo);
+               Account sending = getAccount(sentFrom);
+                if (receiving == null && sendTo == sentFrom){
+                    System.out.println("\nUser you are sending money to doesn't exist");
+                    return;
+                }
 
           Transfer newTransfer = new Transfer(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
+          boolean isTransferred = false;
 
+          if (sending.getBalance().doubleValue() >= amountToSend.doubleValue() && amountToSend.doubleValue() > 0){
+               isTransferred = transferService.postTransferRequest(newTransfer);
+               transferService.processTransfer(receiving, sending, amountToSend, isTransferred);
+          } else {
+              System.out.println("\n Insufficient funds or invalid input.");
+          }
 
-       successOrFail(transferService.postTransferRequest(newTransfer));
-
+          successOrFail(isTransferred);
     }
 
       public void requestMoney(int userRequesting , int userRequested , BigDecimal amountToRequest){
         Account request = getAccount(userRequesting);
         Account requested = getAccount(userRequested);
+        if (requested == null && userRequested == userRequesting){
+            System.out.println("The user you have selected does not exist.");
+            return;
+        }
 
-        Transfer newTransfer = new Transfer(1,
-                request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
+        if(amountToRequest.doubleValue() > 0) {
+            Transfer newTransfer = new Transfer(1,
+                    request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
 
-       successOrFail(transferService.postTransferRequest( newTransfer));
+            successOrFail(transferService.postTransferRequest(newTransfer));
+        }else {
+            System.out.println("Invalid input. The value must be positive");
+        }
 
 
       }

@@ -4,3 +4,9 @@
 2023-03-04T01:16:05.2836379 500 : 
 2023-03-04T01:17:23.5193708 500 : 
 
+2023-03-04T02:08:14.5039882 404 : [{"timestamp":"2023-03-04T08:08:14.050+00:00","status":404,"error":"Not Found","message":"No message available","path":"/transfers2002"}]
+2023-03-04T02:11:24.1533931 404 : [{"timestamp":"2023-03-04T08:11:24.013+00:00","status":404,"error":"Not Found","message":"No message available","path":"/transfers2002"}]
+2023-03-04T02:52:02.7182769 401 : [{"timestamp":"2023-03-04T08:52:02.538+00:00","status":401,"error":"Unauthorized","message":"The User ID: 1500 was not found.","path":"/accounts/1500"}]
+2023-03-04T04:07:30.7163221 500 : [{"timestamp":"2023-03-04T10:07:30.660+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/transfers/2001/pending"}]
+2023-03-04T04:09:36.713437 500 : [{"timestamp":"2023-03-04T10:09:36.654+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/transfers/2002/pending"}]
+2023-03-04T04:10:09.0561748 500 : [{"timestamp":"2023-03-04T10:10:09.014+00:00","status":500,"error":"Internal Server Error","message":"No message available","path":"/transfers/2002/pending"}]
