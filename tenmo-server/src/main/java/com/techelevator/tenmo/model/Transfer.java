@@ -1,15 +1,22 @@
 package com.techelevator.tenmo.model;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 
 public class Transfer {
-    int from;
-    int to;
-    BigDecimal amount;
-    int status;
-    int type;
-    int id;
+    private int id;
+    @JsonProperty("transfer_type_id")
+    private int type;
+    @JsonProperty("transfer_status_id")
+    private int status;
+    @JsonProperty("account_from")
+    private int from;
+    @JsonProperty("account_to")
+    private int to;
+    @JsonProperty("amount")
+    private BigDecimal amount;
     JdbcTransferDao transDao = new JdbcTransferDao();
 
     public Transfer(int type, int from, int to, BigDecimal amount) {
