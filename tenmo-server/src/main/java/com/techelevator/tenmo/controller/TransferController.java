@@ -32,7 +32,7 @@ public class TransferController {
 
     @GetMapping("")
     public List<Transfer> allAccounts() {
-        List<Transfer> all = transDao.getAll("Pull");
+        List<Transfer> all = transDao.getAll("Fill");
         return all;
     }
 
