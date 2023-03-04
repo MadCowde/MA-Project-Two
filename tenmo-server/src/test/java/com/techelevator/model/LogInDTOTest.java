@@ -1,4 +1,4 @@
-package model;
+package com.techelevator.model;
 
 import com.techelevator.tenmo.model.LoginDTO;
 import org.junit.Assert;
@@ -12,22 +12,22 @@ public class LogInDTOTest {
     LoginDTO logIn = new LoginDTO();
 
     @Test
-    public void testing_right_login_dto(){
+    public void testing_right_login_dto() {
         logIn.setUsername("userName");
         logIn.setPassword("password");
 
-        Assert.assertEquals(userName,logIn.getUsername());
+        Assert.assertEquals(userName, logIn.getUsername());
         Assert.assertEquals(password, logIn.getPassword());
 
     }
+
     @Test
-    public void testing_that_wrong_login_does_not_work(){
+    public void testing_that_wrong_login_does_not_work() {
         logIn.setUsername("userName");
         logIn.setPassword("password");
 
-        Assert.assertNotEquals(notUserName,logIn.getUsername());
+        Assert.assertNotEquals(notUserName, logIn.getUsername());
         Assert.assertNotEquals(notPassword, logIn.getPassword());
     }
-
 
 }
