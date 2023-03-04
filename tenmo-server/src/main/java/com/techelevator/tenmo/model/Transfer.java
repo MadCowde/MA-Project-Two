@@ -1,8 +1,6 @@
 package com.techelevator.tenmo.model;
 
 import java.math.BigDecimal;
-
-import javax.validation.constraints.NotBlank;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 
 public class Transfer {
@@ -54,19 +52,19 @@ public class Transfer {
         return true;
     }
 
-    public @NotBlank int getFrom() {
+    public int getFrom() {
         return from;
     }
 
-    public void setFrom(@NotBlank int from) {
+    public void setFrom(int from) {
         this.from = from;
     }
 
-    public @NotBlank int getTo() {
+    public int getTo() {
         return to;
     }
 
-    public void setTo(@NotBlank int to) {
+    public void setTo(int to) {
         this.to = to;
     }
 
