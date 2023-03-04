@@ -10,5 +10,5 @@ public interface TransferDao {
 
     List<Transfer> get(String input);
 
-    int create(int type, int from, int to, BigDecimal amt);
+    boolean create(int type, int from, int to, BigDecimal amt);
 }
