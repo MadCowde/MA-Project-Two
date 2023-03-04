@@ -38,7 +38,7 @@ public class TransferController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public int create(@RequestBody @Valid Transfer trans) throws Exception {
+    public boolean create(@RequestBody @Valid Transfer trans) throws Exception {
         if (!(Objects.isNull(trans))) {
             return transDao.create(trans.getType(), trans.getFrom(), trans.getTo(), trans.getAmount());
         }
