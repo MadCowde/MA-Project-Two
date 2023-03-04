@@ -130,9 +130,9 @@ public class ConsoleService {
 
         public void sendMoneyRequest(int currentUserId){
          //Basic functionality : Pull current user ID. Prompt for user to send money to
-            int userTo = promptForInt("Please enter the user_id you are sending money to");
+            int userTo = promptForInt("Please enter the user_id you are sending money to: ");
             int userFrom = currentUserId;
-            BigDecimal amount = promptForBigDecimal("How much would you like to send?");
+            BigDecimal amount = promptForBigDecimal("How much would you like to send? ");
             acc.sendMoney(userTo, userFrom, amount);
 
         }

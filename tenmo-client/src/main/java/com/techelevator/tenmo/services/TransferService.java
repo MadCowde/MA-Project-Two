@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 public class TransferService {
 
-    public static final String API_BASE_URL = "http://localhost:8080/";
+    public static final String API_BASE_URL = "http://localhost:8080/transfers/";
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -23,10 +23,10 @@ public class TransferService {
     }
 
 
-    public Transfer postTransferRequest(int transferType, int transferStatus,
+    public Transfer postTransferRequest(int transferType,
                                          int transferTo, int transferFrom, BigDecimal amountToTransfer){
 
-        Transfer newTransfer = new Transfer(transferType, transferStatus,
+        Transfer newTransfer = new Transfer(transferType,
                 transferTo, transferFrom, amountToTransfer);
 
         HttpHeaders headers = new HttpHeaders();

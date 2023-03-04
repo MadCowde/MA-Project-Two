@@ -4,6 +4,8 @@ public class TransferStatus {
     private int transfer_status_id;
     private String transfer_status_desc;
 
+    public TransferStatus(){};
+
     public TransferStatus(String transfer_status_desc) {
         this.transfer_status_id = transfer_status_id;
         this.transfer_status_desc = transfer_status_desc;

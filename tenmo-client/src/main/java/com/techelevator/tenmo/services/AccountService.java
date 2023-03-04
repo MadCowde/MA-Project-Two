@@ -34,6 +34,7 @@ public class AccountService {
         try{
             ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), Account.class);
             account = response.getBody();
+
         }catch (RestClientResponseException | ResourceAccessException e){
             BasicLogger.log(e.getMessage());
         }
@@ -92,12 +93,7 @@ public class AccountService {
         /*Question to myself : If we post a transfer type does it
            automatically create an object with the serial SQL creates? */
 
-        TransferType senderType = transferService.postTransferType("Sending");
-
-        TransferStatus receiverStatus = transferService.postTransferStatus("Pending");
-
-        transferService.postTransferRequest(senderType.getTransfer_type_id(), receiverStatus.getTransfer_status_id(),
-                receiving.getAccount_Id(), sending.getAccount_Id(), amountToSend);
+        transferService.postTransferRequest(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
 
 
     }
@@ -109,11 +105,8 @@ public class AccountService {
         /*Question to myself : If we post a transfer type does it
            automatically create an object with the serial SQL creates? */
 
-        TransferType requestType = transferService.postTransferType("Requesting");
-        TransferStatus requestedStatus = transferService.postTransferStatus("Pending");
-
-        transferService.postTransferRequest(requestType.getTransfer_type_id(), requestedStatus.getTransfer_status_id(),
-                request.getAccount_Id(), requested.getAccount_Id(), amountToRequest );
+        transferService.postTransferRequest( 1,
+                request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
 
 
       }

@@ -6,6 +6,8 @@ public class TransferType {
 
     private String transfer_type_desc;
 
+    public TransferType(){};
+
     public TransferType(String transfer_type_desc) {
         this.transfer_type_id = transfer_type_id;
         this.transfer_type_desc = transfer_type_desc;
