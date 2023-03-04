@@ -109,7 +109,7 @@ public class ConsoleService {
         //Goal of this function is print the Transfer history to the console
       Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         for (Transfer transactions : transfersList){
-            System.out.println(transactions.getTransferFrom() + " has paid " + transactions.getTransferTo()
+            System.out.println(transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
                     + "\n $:" + transactions.getTransferAmount());
 
             }
@@ -119,9 +119,10 @@ public class ConsoleService {
         public void printPendingRequests(int currentUserId){
         //Goal of this function is print the pending requests to the console
             Transfer[] pendingList = acc.getPendingRequests(currentUserId);
-
+            //Need to add logic to be able to get transfer status.
             for (Transfer pending : pendingList){
-                System.out.println("The transfer to " + pending.getTransferTo() + " from " + pending.getTransferFrom() + " is " + pending.getTransferStatus());
+                System.out.println("The transfer to " + pending.getAccount_to() + " from " +
+                        pending.getAccount_from() + " is Pending");
             }
 
         }
