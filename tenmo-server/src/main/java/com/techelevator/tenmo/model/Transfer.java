@@ -6,14 +6,10 @@ import javax.validation.constraints.NotBlank;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 
 public class Transfer {
-    @NotBlank
     int from;
-    @NotBlank
     int to;
-    @NotBlank
     BigDecimal amount;
     int status;
-    @NotBlank
     int type;
     int id;
     JdbcTransferDao transDao = new JdbcTransferDao();
