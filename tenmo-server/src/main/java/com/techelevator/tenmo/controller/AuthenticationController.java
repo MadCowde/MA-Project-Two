@@ -2,6 +2,8 @@ package com.techelevator.tenmo.controller;
 
 import javax.validation.Valid;
 import com.techelevator.tenmo.model.RegisterUserDTO;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,6 +28,7 @@ public class AuthenticationController {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    @Autowired
     private final UserDao userDao;
 
     public AuthenticationController(TokenProvider tokenProvider,

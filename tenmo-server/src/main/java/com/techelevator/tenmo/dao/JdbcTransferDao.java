@@ -153,7 +153,7 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public boolean create(int type, int from, int to, BigDecimal amt) {
+    public int create(int type, int from, int to, BigDecimal amt) {
         if ((type == 1 || type == 2) && !Objects.isNull(accDao.get(Integer.toString(from)))
                 && !Objects.isNull(accDao.get(Integer.toString(to)))
                 && (amt.compareTo(new BigDecimal(0)) > 0)) {
@@ -161,9 +161,9 @@ public class JdbcTransferDao implements TransferDao {
             String sql = "INSERT INTO transfer (transfer_type_id,transfer_status_id,account_from,account_to, amount) values (?, ?, ?, ?, ?) RETURNING transfer_id;";
             trans.setId(jt.queryForObject(sql, Integer.class, type, type, from, to, amt));
             transfers.add(trans);
-            return true;
+            return trans.getId();
         } else {
-            return false;
+            return 0;
         }
     }
 
