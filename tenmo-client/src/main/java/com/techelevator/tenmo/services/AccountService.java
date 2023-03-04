@@ -90,11 +90,10 @@ public class AccountService {
         Account receiving = getAccount(sendTo);
         Account sending = getAccount(sentFrom);
 
-        /*Question to myself : If we post a transfer type does it
-           automatically create an object with the serial SQL creates? */
+          Transfer newTransfer = new Transfer(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
 
-        transferService.postTransferRequest(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
 
+       successOrFail(transferService.postTransferRequest(newTransfer));
 
     }
 
@@ -102,11 +101,10 @@ public class AccountService {
         Account request = getAccount(userRequesting);
         Account requested = getAccount(userRequested);
 
-        /*Question to myself : If we post a transfer type does it
-           automatically create an object with the serial SQL creates? */
-
-        transferService.postTransferRequest( 1,
+        Transfer newTransfer = new Transfer(1,
                 request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
+
+       successOrFail(transferService.postTransferRequest( newTransfer));
 
 
       }
@@ -135,6 +133,15 @@ public class AccountService {
         }
 
         return userId;
+    }
+
+    private void successOrFail(boolean result){
+        if(result) {
+            System.out.println("\n The transfer was successful.");
+        }else {
+            System.out.println("\n The transfer did not complete.");
+        }
+
     }
 
 }

@@ -25,6 +25,16 @@ public class Transfer {
         this.account_from = account_from;
         this.account_to = account_to;
         this.transferAmount = transferAmount;
+        switch (transfer_type_id) {
+            case (1):
+                this.transfer_status_id = 1;
+                break;
+            case (2):
+                this.transfer_status_id = 2;
+                break;
+            default:
+                this.transfer_status_id = 0;
+        }
     }
 
   /*  public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal transferAmount) {

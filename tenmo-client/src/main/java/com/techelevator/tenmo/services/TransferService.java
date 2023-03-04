@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 
 public class TransferService {
 
-    public static final String API_BASE_URL = "http://localhost:8080/transfers/";
+    public static final String API_BASE_URL = "http://localhost:8080/transfers";
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -27,18 +27,13 @@ public class TransferService {
     }
 
 
-    public Transfer postTransferRequest(int transferType,
-                                         int transferTo, int transferFrom, BigDecimal amountToTransfer){
-
-        Transfer newTransfer = new Transfer(transferType,
-                transferTo, transferFrom, amountToTransfer);
-
+    public boolean postTransferRequest(Transfer newTransfer){
 
         HttpEntity<Transfer> entity = makeEntity(newTransfer);
 
-        Transfer transferPost = null;
+        boolean transferPost = false;
         try {
-            transferPost = restTemplate.postForObject(API_BASE_URL, entity, Transfer.class);
+            transferPost = restTemplate.postForObject(API_BASE_URL, entity, boolean.class);
         } catch (RestClientResponseException ex){
             BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
         } catch (ResourceAccessException ex){
