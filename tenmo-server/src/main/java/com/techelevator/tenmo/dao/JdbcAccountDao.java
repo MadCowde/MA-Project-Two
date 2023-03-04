@@ -3,9 +3,12 @@ package com.techelevator.tenmo.dao;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import com.techelevator.tenmo.model.Account;
 
@@ -24,45 +27,36 @@ public class JdbcAccountDao implements AccountDao {
         this.jt = new Data().getJdbcTemplate();
     }
 
-    // @Override
-    // public boolean remove(int id) {
-    //     String sql = "SELECT * FROM account where account_id = ?";
-    //     if (jdbcTemplate.queryForObject(sql, Account.class, id) != null) {
-    //         sql = "DELETE FROM account WHERE account_id = ?";
-    //         jdbcTemplate.update(sql, id);
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    public Account get(String input) {
+        if (Objects.isNull(input) || input.isBlank())
+            throw new IllegalArgumentException("invalid input.");
+        switch (inputType(input)) {
+            case ("Account"):
+                int id = Integer.parseInt(input);
+                String sql = "SELECT * FROM account WHERE account_id = ?";
+                SqlRowSet rs = jt.queryForRowSet(sql, id);
+                if (rs.next()) {
+                    return mapRowToAccount(rs);
+                }
+                throw new UsernameNotFoundException("The account ID: " + input + " was not found.");
+            case ("User"):
+                id = Integer.parseInt(input);
+                sql = "SELECT * FROM account where user_id = ?";
+                rs = jt.queryForRowSet(sql, id);
+                if (rs.next()) {
+                    return mapRowToAccount(rs);
+                }
+                throw new UsernameNotFoundException("The User ID: " + input + " was not found.");
+            case ("Username"):
+                sql = "SELECT a.account_id, a.user_id, a.balance, t.username FROM account a JOIN tenmo_user t ON a.user_id = t.user_id where username = ?;";
+                rs = jt.queryForRowSet(sql, input);
+                if (rs.next()) {
+                    return mapRowToAccount(rs);
+                }
+                throw new UsernameNotFoundException("The username: " + input + " was not found.");
 
-    public Account get(String username) {
-        if (username == null)
-            return null;
-        try {
-            if (Integer.parseInt(username) / 1000 == 2) {
-                int id = Integer.parseInt(username);
-                String sql = "SELECT * FROM account where account_id = ?";
-                SqlRowSet rs = jt.queryForRowSet(sql, id);
-                if (rs.next()) {
-                    return new Account(rs.getInt("account_id"), rs.getInt("user_id"), rs.getBigDecimal("balance"));
-                }
+            default:
                 return null;
-            } else {
-                int id = Integer.parseInt(username);
-                String sql = "SELECT * FROM account where user_id = ?";
-                SqlRowSet rs = jt.queryForRowSet(sql, id);
-                if (rs.next()) {
-                    return new Account(rs.getInt("account_id"), rs.getInt("user_id"), rs.getBigDecimal("balance"));
-                }
-                return null;
-            }
-        } catch (Exception e) {
-            String sql = "SELECT a.account_id, a.user_id, a.balance FROM account a JOIN tenmo_user t ON a.user_id = t.user_id where username = ?;";
-            SqlRowSet rs = jt.queryForRowSet(sql, username);
-            if (rs.next()) {
-                return new Account(rs.getInt("account_id"), rs.getInt("user_id"), rs.getBigDecimal("balance"));
-            }
-            return null;
         }
 
     }
@@ -90,6 +84,21 @@ public class JdbcAccountDao implements AccountDao {
             return null;
         }
         return acc;
+    }
+
+    public String inputType(String input) {
+        try {
+            if (Integer.parseInt(input) / 1000 == 2) {
+                return "Account";
+            } else if (Integer.parseInt(input) / 1000 == 1) {
+                return "User";
+            } else
+                return "null";
+        } catch (NumberFormatException e) {
+            return "Username";
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

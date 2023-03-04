@@ -60,11 +60,11 @@ public class JdbcUserDao implements UserDao {
                 throw new UsernameNotFoundException("The User ID: " + input + " was not found.");
             case ("Username"):
                 sql = "SELECT t.user_id, t.username, t.password_hash, t.role FROM account a JOIN tenmo_user t ON a.user_id = t.user_id where username = ?;";
-                rs = jd.queryForRowSet(sql, input);
+                rs = jd.queryForRowSet(sql, input.toLowerCase());
                 if (rs.next()) {
                     return mapRowToUser(rs);
                 }
-                throw new UsernameNotFoundException("The username: " + input + " was not found.");
+                throw new UsernameNotFoundException("The username: " + input.toLowerCase() + " was not found.");
 
             default:
                 return null;
@@ -112,36 +112,13 @@ public class JdbcUserDao implements UserDao {
             throw new DataIntegrityViolationException("Null or empty usernames not allowed.");
         if (Objects.isNull(password) || password.isBlank())
             throw new java.lang.IllegalArgumentException("Null or empty passwords not allowed.");
-        for (User u : users) {
+        for (User u : users) { //Checking to see if the users are already created
             try {
                 if (u.getUsername().equals(username)) {
-                    System.out.println("Username " + username + " already exists.");
+                    System.out.println("Username " + username.toLowerCase() + " already exists.");
                     throw new DataIntegrityViolationException("Username already exists.");
                 }
             } catch (DataIntegrityViolationException e) {
-                System.out.println(e.getMessage());
-                return false;
-            } catch (UsernameNotFoundException e) {
-                // create user
-                String sql = "INSERT INTO tenmo_user (username, password_hash, role) VALUES (?, ?, ?) RETURNING user_id;";
-                String password_hash = new BCryptPasswordEncoder().encode(password);
-                Integer newUserId;
-                newUserId = jd.queryForObject(sql, Integer.class, username, password_hash, USER);
-
-                if (newUserId == null)
-                    return false;
-                // create account
-                System.out.println("Created " + username);
-                User newUser = new User();
-                newUser.setActivated(true);
-                newUser.setAuthorities(USER);
-                newUser.setId(newUserId);
-                newUser.setUsername(username);
-                newUser.setPassword(password_hash);
-                users.add(newUser);
-                accDao.create(newUserId);
-                return true;
-            } catch (Exception e) {
                 System.out.println(e.getMessage());
                 return false;
             }
@@ -150,17 +127,17 @@ public class JdbcUserDao implements UserDao {
         String sql = "INSERT INTO tenmo_user (username, password_hash, role) VALUES (?, ?, ?) RETURNING user_id;";
         String password_hash = new BCryptPasswordEncoder().encode(password);
         Integer newUserId;
-        newUserId = jd.queryForObject(sql, Integer.class, username, password_hash, USER);
+        newUserId = jd.queryForObject(sql, Integer.class, username.toLowerCase(), password_hash, USER);
 
         if (newUserId == null)
             return false;
         // create account
-        System.out.println("Created " + username);
+        System.out.println("Created " + username.toLowerCase());
         User newUser = new User();
         newUser.setActivated(true);
         newUser.setAuthorities(USER);
         newUser.setId(newUserId);
-        newUser.setUsername(username);
+        newUser.setUsername(username.toLowerCase());
         newUser.setPassword(password_hash);
         users.add(newUser);
         accDao.create(newUserId);
@@ -203,7 +180,7 @@ public class JdbcUserDao implements UserDao {
     public User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));
-        user.setUsername(rs.getString("username"));
+        user.setUsername(rs.getString("username").toLowerCase());
         user.setPassword(rs.getString("password_hash"));
         user.setActivated(true);
         user.setAuthorities(rs.getString("role"));

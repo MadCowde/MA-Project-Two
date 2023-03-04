@@ -25,7 +25,7 @@ public class AccountController {
     JdbcAccountDao accDao = new JdbcAccountDao();
 
     //@PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @GetMapping("{input}")
+    @GetMapping("/{input}")
     public Account get(@PathVariable String input) {
         Account acc = accDao.get(input);
 
