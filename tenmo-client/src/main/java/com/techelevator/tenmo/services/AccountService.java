@@ -59,7 +59,7 @@ public class AccountService {
         Account account = getAccount(currentUserId);
 
         Transfer[] history = null;
-        String url = API_BASE_URL + "transfers/"; // Need to confirm the end point to pull the data.
+        String url = API_BASE_URL + "transfers/" + currentUserId + "/completed"; // Need to confirm the end point to pull the data.
 
         try {
             ResponseEntity<Transfer[]> response = restTemplate.exchange(url,

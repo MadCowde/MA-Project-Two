@@ -118,24 +118,37 @@ public class ConsoleService {
         //Goal of this function is print the Transfer history to the console
         Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         int i = 1;
-        System.out.println("\nTransfer History: ");
+        System.out.println("\n\t\t\t\tTransfer History\n#:\tPayer:\t\t\tAmount:\t\tPayee:\t\t\t\tStatus:");
         for (Transfer transactions : transfersList) {
             if (currentUserId == acc.findUser(Integer.toString(transactions.getAccount_from())).getId()) {
                 User to = acc.findUser(Integer.toString(transactions.getAccount_to()));
-                System.out.printf("%d: You(%d) have paid $%.2f to %s(%d).\n", i, currentUserId,
-                        transactions.getTransferAmount(),
-                        to.getUsername(), to.getId());
+                if (transactions.getTransferAmount().compareTo(new BigDecimal(1000)) < 0) {
+                    System.out.printf("%d:\t\tYou(%d)\t\t$%.2f\t\t%s(%d)\t\t%s\n", i, currentUserId,
+                            transactions.getTransferAmount(),
+                            to.getUsername(), to.getId(),
+                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
+                } else {
+                    System.out.printf("%d:\t\tYou(%d)\t\t$%.2f\t%s(%d)\t\t%s\n", i, currentUserId,
+                            transactions.getTransferAmount(),
+                            to.getUsername(), to.getId(),
+                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
+                }
                 i++;
             } else {
                 User from = acc.findUser(Integer.toString(transactions.getAccount_from()));
-                System.out.printf("%d: %s(%d) has paid $%.2f to you(%d).\n", i,
-                        from.getUsername(), from.getId(),
-                        transactions.getTransferAmount(), currentUserId);
+                if (transactions.getTransferAmount().compareTo(new BigDecimal(1000)) < 0) {
+                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\t\tyou(%d)\t\t%s\n", i,
+                            from.getUsername(), from.getId(),
+                            transactions.getTransferAmount(), currentUserId,
+                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
+                } else {
+                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\tyou(%d)\t\t%s\n", i,
+                            from.getUsername(), from.getId(),
+                            transactions.getTransferAmount(), currentUserId,
+                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
+                }
                 i++;
             }
-            // System.out.println(i + ": " + transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
-            //         + " $" + transactions.getTransferAmount());
-            // i++;
         }
     }
 
@@ -143,18 +156,19 @@ public class ConsoleService {
         //Goal of this function is print the pending requests to the console
         Transfer[] pendingList = acc.getPendingRequests(currentUserId);
         //Need to add logic to be able to get transfer status.
-        System.out.println("\nTransfers Pending Approval: \n");
+        System.out.println("\n\t\t\tTransfers Pending Approval");
         if (pendingList == null) {
             System.out.println("There are no pending approvals.");
             return;
         }
+        System.out.println("#:\t\tRecipient:\t\tSender:\t\t\tAmount:\t\tStatus:");
+        int i = 1;
         for (Transfer pending : pendingList) {
-            System.out.printf("The transfer to %s(%d) from %s(%d) for %.2f is Pending.\n",
+            System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\n", i,
                     acc.findUser(Integer.toString(pending.getAccount_to())).getUsername(),
                     pending.getAccount_to(), acc.findUser(Integer.toString(pending.getAccount_from())).getUsername(),
                     pending.getAccount_from(), pending.getTransferAmount());
-            // System.out.println("The transfer to " + pending.getAccount_to() + " from " +
-            //         pending.getAccount_from() + " is Pending.");
+            i++;
         }
 
     }
