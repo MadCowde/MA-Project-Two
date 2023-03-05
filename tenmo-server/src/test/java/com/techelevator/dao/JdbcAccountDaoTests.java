@@ -42,6 +42,45 @@ public class JdbcAccountDaoTests extends Data {
         Assert.assertEquals(expected.getUser_Id(), actual.getUser_Id());
         Assert.assertEquals(expected.getBalance(), actual.getBalance());
     }
+    @Test
+    public void testing_input_type(){
+        String [] inputs = {"1000","2000"};
+        Assert.assertEquals("Account",sut.inputType(inputs[1]));
+        Assert.assertEquals("User",sut.inputType(inputs[0]));
+    }
+
+    @Test
+    public void should_return_string_null_if_no_accounts_match(){
+        String nullVariable = "null";
+        String nullReturnInput = "3000";
+        Assert.assertEquals(nullVariable,sut.inputType(nullReturnInput));
+    }
+
+    @Test
+    public void should_return_user_name_when_input_is_not_a_numeric_string(){
+        String shouldReturnThis = "Username";
+        String testingfInput = "Actor";
+        Assert.assertEquals(shouldReturnThis,sut.inputType(testingfInput));
+    }
+
+    @Test
+    public void should_create_a_new_account_with_user_id_and_return_boolean_if_successful(){
+        int usrId = 1001;
+        Assert.assertTrue(sut.create(usrId));
+
+    }
+    @Test
+    public void should_not_create_an_account_with_the_wrong_inputId(){
+        int fakeUsrId = 5000;
+        Assert.assertFalse(sut.create(fakeUsrId));
+    }
+
+    @Test
+    public void should_create_an_account_by_entering_userid_and_balance(){
+        Account acct = new Account(2001,1001,new BigDecimal("1000.00"));
+        Account acct2 = new Account(2001,1001,new BigDecimal("1000.00"));
+        Assert.assertEquals( sut.create(acct),sut.create(acct2));
+    }
     //    @AfterEach
 //    @AfterAll
 //    public void shutdown() {
