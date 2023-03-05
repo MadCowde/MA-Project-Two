@@ -170,15 +170,12 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> getPending(Account acc) {
         List<Transfer> listing = getAll("Fill");
         for (int i = listing.size() - 1; i >= 0; i--) {
-            if (!(listing.get(i).getTo() == acc.getAccount_Id())) {
-                if (!(listing.get(i).getFrom() == acc.getAccount_Id())) {
-                    listing.remove(i);
-                }
-            }
-            if (!(listing.get(i).getFrom() == acc.getAccount_Id())) {
-                if (!(listing.get(i).getTo() == acc.getAccount_Id())) {
-                    listing.remove(i);
-                }
+            if (listing.get(i).getTo() == acc.getAccount_Id()) {
+                continue;
+            } else if (listing.get(i).getFrom() == acc.getAccount_Id()) {
+                continue;
+            } else {
+                listing.remove(i);
             }
         }
         return listing;
@@ -198,6 +195,25 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
         jt.update(sql, trans.getStatus(), trans.getId());
         return true;
+    }
+
+    public List<Transfer> getFinished(Account acc) {
+        List<Transfer> listing = getAll("Fill");
+        for (int i = listing.size() - 1; i >= 0; i--) {
+            if (listing.get(i).getStatus() == 3 || listing.get(i).getStatus() == 2) {
+                if (listing.get(i).getTo() == acc.getAccount_Id()) {
+                    continue;
+                } else if (listing.get(i).getFrom() == acc.getAccount_Id()) {
+                    continue;
+                } else {
+                    listing.remove(i);
+                }
+            } else {
+                listing.remove(i);
+            }
+
+        }
+        return listing;
     }
 
 }

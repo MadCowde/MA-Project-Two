@@ -54,9 +54,14 @@ public class TransferController {
         return transDao.remove(id);
     }
 
-    @PutMapping("/{input}/pending/{id}")
-    public boolean setStatus(Transfer trans) {
+    @PutMapping("/{id}")
+    public boolean setStatus(@RequestBody @Valid Transfer trans) {
         transDao.setStatus(trans);
         return true;
+    }
+
+    @GetMapping("/{input}/completed")
+    public List<Transfer> getFinished(@PathVariable String input) {
+        return transDao.getFinished(accDao.get(input));
     }
 }

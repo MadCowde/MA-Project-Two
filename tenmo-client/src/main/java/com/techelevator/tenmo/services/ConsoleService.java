@@ -1,6 +1,5 @@
 package com.techelevator.tenmo.services;
 
-
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
@@ -100,63 +99,68 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void printCurrentBalance(int userId){
-      //Goal of this method is to use accountservice to return the balance with the user_id.
+    public void printCurrentBalance(int userId) {
+        //Goal of this method is to use accountservice to return the balance with the user_id.
         Account account = acc.getAccount(userId);
         System.out.println("The account balance is : " +
-        account.getBalance());
+                account.getBalance());
     }
-    public void printListOfUsers(){
-      User[] users =  acc.getAllUsers();
-      for (User user : users){
-          System.out.println(user.toString());
-      }
+
+    public void printListOfUsers() {
+        User[] users = acc.getAllUsers();
+        for (User user : users) {
+            System.out.println(user.toString());
+        }
 
     }
 
-    public void printTransferHistory(int currentUserId){
+    public void printTransferHistory(int currentUserId) {
         //Goal of this function is print the Transfer history to the console
-      Transfer[] transfersList = acc.getTransferHistory(currentUserId);
+        Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         int i = 1;
         System.out.println("\nTransfer History: ");
-        for (Transfer transactions : transfersList){
+        for (Transfer transactions : transfersList) {
+            // if (currentUserId == acc.findUserId(Integer.toString(transactions.getAccount_from()))) {
+            //     System.out.printf("%d: You have paid $%d to %d.", i, transactions.getAccount_to(),
+            //             transactions.getTransferAmount());
+            // } would have to put an Else statement here for when you are the recipient. 
 
             System.out.println(i + ": " + transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
                     + " $" + transactions.getTransferAmount());
             i++;
 
-            }
-
         }
 
-        public void printPendingRequests(int currentUserId){
+    }
+
+    public void printPendingRequests(int currentUserId) {
         //Goal of this function is print the pending requests to the console
-            Transfer[] pendingList = acc.getPendingRequests(currentUserId);
-            //Need to add logic to be able to get transfer status.
-            System.out.println("\nTransfers Pending Approval: \n");
-            if(pendingList == null){
-                System.out.println("There are no pending approvals");
-                return;
-            }
-            for (Transfer pending : pendingList){
-                System.out.println("The transfer to " + pending.getAccount_to() + " from " +
-                        pending.getAccount_from() + " is Pending");
-            }
-
+        Transfer[] pendingList = acc.getPendingRequests(currentUserId);
+        //Need to add logic to be able to get transfer status.
+        System.out.println("\nTransfers Pending Approval: \n");
+        if (pendingList == null) {
+            System.out.println("There are no pending approvals");
+            return;
+        }
+        for (Transfer pending : pendingList) {
+            System.out.println("The transfer to " + pending.getAccount_to() + " from " +
+                    pending.getAccount_from() + " is Pending");
         }
 
-        public void sendMoneyRequest(int currentUserId){
-         //Basic functionality : Pull current user ID. Prompt for user to send money to
-            System.out.println("\n");
-            printListOfUsers();
-            int userTo = promptForInt("\nPlease enter the user_id you are sending money to: ");
-            int userFrom = currentUserId;
-            BigDecimal amount = promptForBigDecimal("How much would you like to send? ");
-            acc.sendMoney(userTo, userFrom, amount);
+    }
 
-        }
+    public void sendMoneyRequest(int currentUserId) {
+        //Basic functionality : Pull current user ID. Prompt for user to send money to
+        System.out.println("\n");
+        printListOfUsers();
+        int userTo = promptForInt("\nPlease enter the user_id you are sending money to: ");
+        int userFrom = currentUserId;
+        BigDecimal amount = promptForBigDecimal("How much would you like to send? ");
+        acc.sendMoney(userTo, userFrom, amount);
 
-        public void requestMoneyFrom(int currentUserId){
+    }
+
+    public void requestMoneyFrom(int currentUserId) {
         System.out.println("\n");
         printListOfUsers();
         int userRequesting = currentUserId;
@@ -164,9 +168,6 @@ public class ConsoleService {
         BigDecimal amount = promptForBigDecimal("How much would you like to request? ");
         acc.requestMoney(userRequesting, userFrom, amount);
 
-        }
-
     }
 
-
-
+}
