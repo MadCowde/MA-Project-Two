@@ -117,7 +117,13 @@ public class JdbcAccountDao implements AccountDao {
         Account account = new Account(result.getInt("account_id"), result.getInt("user_id"),
                 result.getBigDecimal("balance"));
         return account;
+    }
 
+    public boolean setBalance(Account acc) {
+        String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
+        jt.update(sql, acc.getBalance(), acc.getAccount_Id());
+
+        return true;
     }
 
 }

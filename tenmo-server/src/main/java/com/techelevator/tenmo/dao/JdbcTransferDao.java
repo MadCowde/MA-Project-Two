@@ -194,4 +194,10 @@ public class JdbcTransferDao implements TransferDao {
         return false;
     }
 
+    public boolean setStatus(Transfer trans) {
+        String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
+        jt.update(sql, trans.getStatus(), trans.getId());
+        return true;
+    }
+
 }

@@ -56,8 +56,7 @@ public class TransferController {
 
     @PutMapping("/{input}/pending/{id}")
     public boolean setStatus(Transfer trans) {
-        Transfer changed = transDao.get(Integer.toString(trans.getId())).get(0);
-        changed.setStatus(trans.getStatus());
+        transDao.setStatus(trans);
         return true;
     }
 }
