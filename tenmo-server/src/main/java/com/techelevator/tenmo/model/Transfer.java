@@ -26,14 +26,14 @@ public class Transfer {
         this.amount = amount;
         this.type = type;
         switch (type) {
-            case (1):
-                this.status = 1;
+            case (1): // Type = Request
+                this.status = 1; // Status = Pending
                 break;
-            case (2):
-                this.status = 2;
+            case (2): // Type = Send
+                this.status = 2; // Status = Approved
                 break;
             default:
-                this.status = 0;
+                this.status = 3;// Status = Rejected
         }
     }
 
