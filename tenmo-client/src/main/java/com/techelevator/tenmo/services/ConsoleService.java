@@ -115,36 +115,36 @@ public class ConsoleService {
         int i = 1;
         System.out.println("\n\t\t\t\tTransfer History\n#:\t\tPayer:\t\t\tAmount:\t\tPayee:\t\t\tStatus:\t\t\tID:");
         for (Transfer transactions : transfersList) {
-            if (currentUserId == acc.findUser(Integer.toString(transactions.getAccount_from())).getId()) {
-                User to = acc.findUser(Integer.toString(transactions.getAccount_to()));
+            if (currentUserId == acc.findUser(Integer.toString(transactions.getAccountFrom())).getId()) {
+                User to = acc.findUser(Integer.toString(transactions.getAccountTo()));
                 if (transactions.getTransferAmount().compareTo(new BigDecimal(1000)) < 0) {
                     System.out.printf("%d:\t\tYou(%d)\t\t$%.2f\t\t%s(%d)\t\t%s\t\t%d\n", i, currentUserId,
                             transactions.getTransferAmount(),
                             to.getUsername(), to.getId(),
-                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected",
-                            transactions.getTransfer_id());
+                            (transactions.getTransferStatusId() == 2) ? "Approved" : "Rejected",
+                            transactions.getTransferId());
                 } else {
                     System.out.printf("%d:\t\tYou(%d)\t\t$%.2f\t%s(%d)\t\t%s\t\t%d\n", i, currentUserId,
                             transactions.getTransferAmount(),
                             to.getUsername(), to.getId(),
-                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected",
-                            transactions.getTransfer_id());
+                            (transactions.getTransferStatusId() == 2) ? "Approved" : "Rejected",
+                            transactions.getTransferId());
                 }
                 i++;
             } else {
-                User from = acc.findUser(Integer.toString(transactions.getAccount_from()));
+                User from = acc.findUser(Integer.toString(transactions.getAccountFrom()));
                 if (transactions.getTransferAmount().compareTo(new BigDecimal(1000)) < 0) {
                     System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\t\tYou(%d)\t\t%s\t\t%d\n", i,
                             from.getUsername(), from.getId(),
                             transactions.getTransferAmount(), currentUserId,
-                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected",
-                            transactions.getTransfer_id());
+                            (transactions.getTransferStatusId() == 2) ? "Approved" : "Rejected",
+                            transactions.getTransferId());
                 } else {
                     System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\tYou(%d)\t\t%s\t\t%d\n", i,
                             from.getUsername(), from.getId(),
                             transactions.getTransferAmount(), currentUserId,
-                            (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected",
-                            transactions.getTransfer_id());
+                            (transactions.getTransferStatusId() == 2) ? "Approved" : "Rejected",
+                            transactions.getTransferId());
                 }
                 i++;
             }
@@ -163,15 +163,15 @@ public class ConsoleService {
         System.out.println("#:\t\tRecipient:\t\tSender:\t\t\tAmount:\t\tStatus:\t\tID:");
         int i = 1;
         for (Transfer pending : pendingList) {
-            User to = acc.findUser(Integer.toString(pending.getAccount_to()));
-            User from = acc.findUser(Integer.toString(pending.getAccount_from()));
+            User to = acc.findUser(Integer.toString(pending.getAccountTo()));
+            User from = acc.findUser(Integer.toString(pending.getAccountFrom()));
             System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\t\t%d\n", i,
                     to.getId() == currentUserId ? "You" : to.getUsername(),
-                    pending.getAccount_to(), from.getId() == currentUserId ? "You" : from.getUsername(),
-                    pending.getAccount_from(), pending.getTransferAmount(), pending.getTransfer_id());
+                    pending.getAccountTo(), from.getId() == currentUserId ? "You" : from.getUsername(),
+                    pending.getAccountFrom(), pending.getTransferAmount(), pending.getTransferId());
             i++;
         }
-        promptToAcceptPendingRequests(pendingList);
+        promptToAcceptPendingRequests(currentUserId);
     }
 
 
@@ -201,12 +201,12 @@ public class ConsoleService {
 
     }
 
-    public void promptToAcceptPendingRequests(Transfer[] list){
-        int grabTransfer = promptForInt("Please select a #: to approve or reject an incoming request. ");
-        System.out.println(list[grabTransfer].toString());
-        Transfer transferToAcceptDecline = acc.getTransfer(list[grabTransfer].getTransfer_id());
+    public void promptToAcceptPendingRequests(int currentUserId){
+        String grabTransfer = promptForString("Please select a ID to approve or reject an incoming request. ");
+        System.out.println();
+        Transfer transferToAcceptDecline = acc.getTransfer(grabTransfer);
         String isYesNo = promptForString("Please accept or decline the request for money (Y/N)");
-        acc.acceptPendingRequest(transferToAcceptDecline, isYesNo);
+        acc.acceptPendingRequest(transferToAcceptDecline, isYesNo, currentUserId);
 
     }
 

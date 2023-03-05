@@ -23,9 +23,9 @@ public class TransferController {
     JdbcTransferDao transDao = new JdbcTransferDao();
 
     @GetMapping("/{input}")
-    public List<Transfer> get(@PathVariable String input) {
+    public Transfer get(@PathVariable String input) {
         List<Transfer> trans = transDao.get(input);
-        return trans;
+        return trans.get(0);
     }
 
     @GetMapping("")

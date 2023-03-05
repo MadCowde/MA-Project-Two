@@ -5,35 +5,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 public class Account {
-    @JsonProperty("account_Id")
-    int account_Id;
-    @JsonProperty("user_Id")
-    int user_Id;
+    @JsonProperty("account_id")
+    int accountId;
+    @JsonProperty("user_id")
+    int userId;
     @JsonProperty("balance")
     BigDecimal balance;
 
     public Account(){};
 
-    public Account(int account_Id, int user_Id, BigDecimal balance) {
-        this.account_Id = account_Id;
-        this.user_Id = user_Id;
+    public Account(int accountId, int userId, BigDecimal balance) {
+        this.accountId = accountId;
+        this.userId = userId;
         this.balance = balance;
     }
 
-    public int getAccount_Id() {
-        return account_Id;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_Id(int account_Id) {
-        this.account_Id = account_Id;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
-    public int getUser_Id() {
-        return user_Id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_Id(int user_Id) {
-        this.user_Id = user_Id;
+    public void setUser_Id(int userId) {
+        this.userId = userId;
     }
 
     public BigDecimal getBalance() {
@@ -46,7 +46,7 @@ public class Account {
 
     @Override
     public String toString(){
-        return "Account{" + "account_Id=" + account_Id + ", user_Id=" + user_Id
+        return "Account{" + "account_id=" + accountId + ", user_id=" + userId
                 + '\'' + ", balance='" + balance + '}';
 
     }

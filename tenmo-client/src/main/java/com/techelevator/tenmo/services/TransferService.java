@@ -2,10 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferStatus;
-import com.techelevator.tenmo.model.TransferType;
 import com.techelevator.util.BasicLogger;
-import io.cucumber.core.resource.Resource;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -51,7 +48,7 @@ public class TransferService {
         HttpEntity<Object> entity = makeEntity(account);
 
         try{
-            restTemplate.put(API_BASE_URL + "accounts/" + account.getAccount_Id(), entity);
+            restTemplate.put(API_BASE_URL + "accounts/" + account.getAccountId(), entity);
 
         } catch (RestClientResponseException ex){
         BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
@@ -66,7 +63,7 @@ public class TransferService {
         HttpEntity<Object> entity = makeEntity(transfer);
 
         try{
-            restTemplate.put(API_BASE_URL + "transfers/" + transfer.getTransfer_id(), entity);
+            restTemplate.put(API_BASE_URL + "transfers/" + transfer.getTransferId(), entity);
 
         } catch (RestClientResponseException ex){
             BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
@@ -85,6 +82,9 @@ public class TransferService {
             sending.setBalance(sendingBalanceUpdate);
             updateBalance(receiving);
             updateBalance(sending);
+        } else {
+            System.out.println("\nYou cannot accept the request for" +
+                    " money if you are the person who sent the request");
         }
 
 

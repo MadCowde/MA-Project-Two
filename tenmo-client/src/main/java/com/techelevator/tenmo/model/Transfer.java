@@ -5,54 +5,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 public class Transfer {
-
-    private int transfer_id;
+    @JsonProperty("transfer_id")
+    private int transferId;
     @JsonProperty("transfer_type_id")
-    private int transfer_type_id;
-
-    private int transfer_status_id;
+    private int transferTypeId;
+    @JsonProperty("transfer_status_id")
+    private int transferStatusId;
     @JsonProperty("account_from")
-    private int account_from;
+    private int accountFrom;
     @JsonProperty("account_to")
-    private int account_to;
+    private int accountTo;
     @JsonProperty("amount")
     private BigDecimal transferAmount;
 
     public Transfer(){};
 
-    public Transfer(int transfer_type_id, int account_from, int account_to, BigDecimal transferAmount){
-        this.transfer_id = transfer_id;
-        this.transfer_type_id = transfer_type_id;
-        this.account_from = account_from;
-        this.account_to = account_to;
+    public Transfer(int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount){
+        this.transferId = transferId;
+        this.transferTypeId = transferTypeId;
+        this.accountFrom = accountFrom;
+        this.accountTo = accountTo;
         this.transferAmount = transferAmount;
-        switch (transfer_type_id) {
+        switch (transferTypeId) {
             case (1):
-                this.transfer_status_id = 1;
+                this.transferStatusId = 1;
                 break;
             case (2):
-                this.transfer_status_id = 2;
+                this.transferStatusId = 2;
                 break;
             default:
-                this.transfer_status_id = 0;
+                this.transferStatusId = 3;
         }
     }
-    public Transfer(int transfer_id, int transfer_type_id, int account_from, int account_to, BigDecimal transferAmount){
-        this.transfer_id = transfer_id;
-        this.transfer_type_id = transfer_type_id;
-        this.account_from = account_from;
-        this.account_to = account_to;
+    public Transfer(int transferIdd, int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount){
+        this.transferId = transferTypeId;
+        this.transferTypeId = transferTypeId;
+        this.transferStatusId = transferStatusId;
+        this.accountFrom = accountFrom;
+        this.accountTo = accountTo;
         this.transferAmount = transferAmount;
-        switch (transfer_type_id) {
-            case (1):
-                this.transfer_status_id = 1;
-                break;
-            case (2):
-                this.transfer_status_id = 2;
-                break;
-            default:
-                this.transfer_status_id = 0;
-        }
+
+
     }
 
   /*  public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal transferAmount) {
@@ -63,44 +56,44 @@ public class Transfer {
         this.transferAmount = transferAmount;
     } */
 
-    public int getTransfer_id() {
-        return transfer_id;
+    public int getTransferId() {
+        return transferId;
     }
 
-    public void setTransfer_id(int transfer_id) {
-        this.transfer_id = transfer_id;
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
     }
 
-    public int getTransfer_type_id() {
-        return transfer_type_id;
+    public int getTransferTypeId() {
+        return transferTypeId;
     }
 
-    public void setTransfer_type_id(int transfer_type_id) {
-        this.transfer_type_id = transfer_type_id;
+    public void setTransferTypeId(int transferTypeId) {
+        this.transferTypeId = transferTypeId;
     }
 
-    public int getTransfer_status_id() {
-        return transfer_status_id;
+    public int getTransferStatusId() {
+        return transferStatusId;
     }
 
-    public void setTransfer_status_id(int transfer_status_id) {
-        this.transfer_status_id = transfer_status_id;
+    public void setTransferStatusId(int transferStatusId) {
+        this.transferStatusId = transferStatusId;
     }
 
-    public int getAccount_from() {
-        return account_from;
+    public int getAccountFrom() {
+        return accountFrom;
     }
 
-    public void setAccount_from(int account_from) {
-        this.account_from = account_from;
+    public void setAccountFrom(int accountFrom) {
+        this.accountFrom = accountFrom;
     }
 
-    public int getAccount_to() {
-        return account_to;
+    public int getAccountTo() {
+        return accountTo;
     }
 
-    public void setAccount_to(int account_to) {
-        this.account_to = account_to;
+    public void setAccountTo(int accountTo) {
+        this.accountTo = accountTo;
     }
 
     public BigDecimal getTransferAmount() {
@@ -112,7 +105,7 @@ public class Transfer {
     }
 
     public String toString(){
-        return "TransferId= " + transfer_id + ", TransferStatus= " + transfer_status_id + ", TransferType= "
-                + transfer_type_id;
+        return "TransferId= " + transferId + ", TransferStatus= " + transferStatusId + ", TransferType= "
+                + transferTypeId;
     }
 }

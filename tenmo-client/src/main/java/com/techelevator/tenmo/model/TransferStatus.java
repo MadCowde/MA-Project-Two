@@ -1,29 +1,29 @@
 package com.techelevator.tenmo.model;
 
 public class TransferStatus {
-    private int transfer_status_id;
-    private String transfer_status_desc;
+    private int transferStatusId;
+    private String transferStatusDesc;
 
     public TransferStatus(){};
 
-    public TransferStatus(String transfer_status_desc) {
-        this.transfer_status_id = transfer_status_id;
-        this.transfer_status_desc = transfer_status_desc;
+    public TransferStatus(int transferStatusId, String transferStatusDesc) {
+        this.transferStatusId = transferStatusId;
+        this.transferStatusDesc = transferStatusDesc;
     }
 
-    public int getTransfer_status_id() {
-        return transfer_status_id;
+    public int getTransferStatusId() {
+        return transferStatusId;
     }
 
-    public void setTransfer_status_id(int transfer_status_id) {
-        this.transfer_status_id = transfer_status_id;
+    public void setTransferStatusId(int transferStatusId) {
+        this.transferStatusId = transferStatusId;
     }
 
-    public String getTransfer_status_desc() {
-        return transfer_status_desc;
+    public String getTransferStatusDesc() {
+        return transferStatusDesc;
     }
 
-    public void setTransfer_status_desc(String transfer_status_desc) {
-        this.transfer_status_desc = transfer_status_desc;
+    public void setTransferStatusDesc(String transferStatusDesc) {
+        this.transferStatusDesc = transferStatusDesc;
     }
 }

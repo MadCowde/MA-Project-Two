@@ -39,7 +39,7 @@ public class AccountService {
         return account;
 
     }
-    public Transfer getTransfer(int transferId){
+    public Transfer getTransfer(String transferId){
         Transfer transfer = null;
         String url = API_BASE_URL + "transfers/" + transferId;
 
@@ -95,7 +95,7 @@ public class AccountService {
         Account account = getAccount(currentUserId);
 
         Transfer[] pending = null;
-        String url = API_BASE_URL + "transfers/" + account.getAccount_Id() + "/pending"; //Need to confirm the end point to get
+        String url = API_BASE_URL + "transfers/" + account.getAccountId() + "/pending"; //Need to confirm the end point to get
 
         try {
             ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
@@ -120,7 +120,7 @@ public class AccountService {
             return;
         }
 
-        Transfer newTransfer = new Transfer(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
+        Transfer newTransfer = new Transfer(2, sending.getAccountId(), receiving.getAccountId(), amountToSend);
         boolean isTransferred = false;
 
         if (sending.getBalance().doubleValue() >= amountToSend.doubleValue() && amountToSend.doubleValue() > 0) {
@@ -143,7 +143,7 @@ public class AccountService {
 
         if (amountToRequest.doubleValue() > 0) {
             Transfer newTransfer = new Transfer(1,
-                    request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
+                    request.getAccountId(), requested.getAccountId(), amountToRequest);
 
             successOrFail(transferService.postTransferRequest(newTransfer));
         } else {
@@ -152,20 +152,26 @@ public class AccountService {
 
     }
 
-    public void acceptPendingRequest(Transfer transferToAcceptDecline, String isYesNo){
+    public void acceptPendingRequest(Transfer transferToAcceptDecline, String isYesNo, int currentUserId){
         boolean isAccepted = false;
+        if (transferToAcceptDecline == null){
+            System.out.println("This is not a valid transfer request. Please check the ID");
+            return;
+        }
 
         if (isYesNo.equalsIgnoreCase("Yes") || isYesNo.equalsIgnoreCase("Y")){
-            isAccepted = true;
-            transferToAcceptDecline.setTransfer_status_id(2);
+            transferToAcceptDecline.setTransferStatusId(2);
             transferService.updateTransfer(transferToAcceptDecline);
-            Account receive = getAccount(transferToAcceptDecline.getAccount_to());
-            Account send = getAccount(transferToAcceptDecline.getAccount_from());
+            Account receive = getAccount(transferToAcceptDecline.getAccountTo());
+            Account send = getAccount(transferToAcceptDecline.getAccountFrom());
+            if(currentUserId != send.getUserId()){
+                isAccepted = true;
+            }
             transferService.processTransfer(receive, send,
                     transferToAcceptDecline.getTransferAmount(), isAccepted);
 
         } else if (isYesNo.equalsIgnoreCase("No") || isYesNo.equalsIgnoreCase("N")) {
-            transferToAcceptDecline.setTransfer_status_id(3);
+            transferToAcceptDecline.setTransferStatusId(3);
             transferService.updateTransfer(transferToAcceptDecline);
         }else {
             System.out.println("The input was invalid. Please accept with (Y/N). Y = Yes | N = No");

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 
 public class Transfer {
+    @JsonProperty("transfer_id")
     private int id;
     @JsonProperty("transfer_type_id")
     private int type;
@@ -20,7 +21,7 @@ public class Transfer {
     JdbcTransferDao transDao = new JdbcTransferDao();
 
     public Transfer(int type, int from, int to, BigDecimal amount) {
-        this.id = 0;
+        this.id = id;
         this.from = from;
         this.to = to;
         this.amount = amount;

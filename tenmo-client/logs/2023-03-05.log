@@ -1,1 +1,6 @@
 2023-03-05T00:05:42.7480478 I/O error on GET request for "http://localhost:8080/transfers/2001/pending": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+2023-03-05T00:44:34.2509464 I/O error on POST request for "http://localhost:8080/login": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+2023-03-05T00:51:47.8686297 401 : [no body]
+2023-03-05T02:14:10.265212 500 : [{"timestamp":"2023-03-05T08:14:10.155+00:00","status":500,"error":"Internal Server Error","message":"Cannot invoke \"com.techelevator.tenmo.model.Account.getAccount_Id()\" because \"acc\" is null","path":"/transfers/0/pending"}]
+2023-03-05T02:35:19.4720096 500 : [{"timestamp":"2023-03-05T08:35:19.342+00:00","status":500,"error":"Internal Server Error","message":"Cannot invoke \"com.techelevator.tenmo.model.Account.getAccount_Id()\" because \"acc\" is null","path":"/transfers/0/pending"}]
+2023-03-05T02:45:54.1543011 500 : [{"timestamp":"2023-03-05T08:45:54.093+00:00","status":500,"error":"Internal Server Error","message":"Cannot invoke \"java.util.List.get(int)\" because \"trans\" is null","path":"/transfers/0"}]

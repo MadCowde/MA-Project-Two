@@ -1,10 +1,13 @@
 package com.techelevator.tenmo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class User {
-
+  //  @JsonProperty("user_id")
     private int id;
+ //   @JsonProperty("username")
     private String username;
 
     public int getId() {
