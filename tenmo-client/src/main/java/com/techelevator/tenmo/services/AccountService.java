@@ -56,8 +56,6 @@ public class AccountService {
     }
 
     public Transfer[] getTransferHistory(int currentUserId) {
-        Account account = getAccount(currentUserId);
-
         Transfer[] history = null;
         String url = API_BASE_URL + "transfers/" + currentUserId + "/completed"; // Need to confirm the end point to pull the data.
 
