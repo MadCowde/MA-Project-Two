@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
-
 public class AccountService {
 
     public static final String API_BASE_URL = "http://localhost:8080/";
@@ -24,43 +23,43 @@ public class AccountService {
         this.authToken = authToken;
     }
 
-    public Account getAccount(int userId){
+    public Account getAccount(int userId) {
         Account account = null;
         String url = API_BASE_URL + "accounts/" + userId;
 
-        try{
-            ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), Account.class);
+        try {
+            ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
+                    Account.class);
             account = response.getBody();
 
-        }catch (RestClientResponseException | ResourceAccessException e){
+        } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
 
-       return account;
+        return account;
 
     }
 
-    public User[] getAllUsers(){
+    public User[] getAllUsers() {
         User[] listOfUsers = null;
-        String url = API_BASE_URL+ "users";
+        String url = API_BASE_URL + "users";
 
-        try{
+        try {
             ResponseEntity<User[]> response = restTemplate.exchange(url,
-                    HttpMethod.GET, makeAuthEntity(),User[].class);
+                    HttpMethod.GET, makeAuthEntity(), User[].class);
             listOfUsers = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e){
+        } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
 
         return listOfUsers;
     }
 
-
-      public Transfer[] getTransferHistory(int currentUserId){
+    public Transfer[] getTransferHistory(int currentUserId) {
         Account account = getAccount(currentUserId);
 
         Transfer[] history = null;
-        String url = API_BASE_URL + "transfers/" ; // Need to confirm the end point to pull the data.
+        String url = API_BASE_URL + "transfers/"; // Need to confirm the end point to pull the data.
 
         try {
             ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
@@ -69,78 +68,75 @@ public class AccountService {
                     Transfer[].class);
 
             history = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e){
+        } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
 
         return history;
-      }
-
-      public Transfer[] getPendingRequests(int currentUserId){
-        //Might be able to use TransferHistory to grab status depending on the endpoint that we use.
-        // Goal is  to see pending incoming or outgoing money requests. Potentially need a way to accept money
-          Account account = getAccount(currentUserId);
-
-            Transfer[] pending = null;
-            String url = API_BASE_URL + "transfers/" + account.getAccount_Id() + "/pending"; //Need to confirm the end point to get
-
-          try {
-              ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
-                      HttpMethod.GET,
-                      makeAuthEntity(),
-                      Transfer[].class);
-
-              pending = response.getBody();
-          } catch (RestClientResponseException | ResourceAccessException e){
-              BasicLogger.log(e.getMessage());
-          }
-
-          return pending;
-      }
-
-      public void sendMoney(int sendTo, int sentFrom, BigDecimal amountToSend){
-
-               Account receiving = getAccount(sendTo);
-               Account sending = getAccount(sentFrom);
-                if (receiving == null && sendTo == sentFrom){
-                    System.out.println("\nUser you are sending money to doesn't exist");
-                    return;
-                }
-
-          Transfer newTransfer = new Transfer(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
-          boolean isTransferred = false;
-
-          if (sending.getBalance().doubleValue() >= amountToSend.doubleValue() && amountToSend.doubleValue() > 0){
-               isTransferred = transferService.postTransferRequest(newTransfer);
-               transferService.processTransfer(receiving, sending, amountToSend, isTransferred);
-          } else {
-              System.out.println("\n Insufficient funds or invalid input.");
-          }
-
-          successOrFail(isTransferred);
     }
 
-      public void requestMoney(int userRequesting , int userRequested , BigDecimal amountToRequest){
+    public Transfer[] getPendingRequests(int currentUserId) {
+        //Might be able to use TransferHistory to grab status depending on the endpoint that we use.
+        // Goal is  to see pending incoming or outgoing money requests. Potentially need a way to accept money
+        Account account = getAccount(currentUserId);
+
+        Transfer[] pending = null;
+        String url = API_BASE_URL + "transfers/" + account.getAccount_Id() + "/pending"; //Need to confirm the end point to get
+
+        try {
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer[].class);
+
+            pending = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+        return pending;
+    }
+
+    public void sendMoney(int sendTo, int sentFrom, BigDecimal amountToSend) {
+
+        Account receiving = getAccount(sendTo);
+        Account sending = getAccount(sentFrom);
+        if (receiving == null && sendTo == sentFrom) {
+            System.out.println("\nUser you are sending money to doesn't exist");
+            return;
+        }
+
+        Transfer newTransfer = new Transfer(2, sending.getAccount_Id(), receiving.getAccount_Id(), amountToSend);
+        boolean isTransferred = false;
+
+        if (sending.getBalance().doubleValue() >= amountToSend.doubleValue() && amountToSend.doubleValue() > 0) {
+            isTransferred = transferService.postTransferRequest(newTransfer);
+            transferService.processTransfer(receiving, sending, amountToSend, isTransferred);
+        } else {
+            System.out.println("\n Insufficient funds or invalid input.");
+        }
+
+        successOrFail(isTransferred);
+    }
+
+    public void requestMoney(int userRequesting, int userRequested, BigDecimal amountToRequest) {
         Account request = getAccount(userRequesting);
         Account requested = getAccount(userRequested);
-        if (requested == null && userRequested == userRequesting){
+        if (requested == null && userRequested == userRequesting) {
             System.out.println("The user you have selected does not exist.");
             return;
         }
 
-        if(amountToRequest.doubleValue() > 0) {
+        if (amountToRequest.doubleValue() > 0) {
             Transfer newTransfer = new Transfer(1,
                     request.getAccount_Id(), requested.getAccount_Id(), amountToRequest);
 
             successOrFail(transferService.postTransferRequest(newTransfer));
-        }else {
+        } else {
             System.out.println("Invalid input. The value must be positive");
         }
 
-
-      }
-
-
+    }
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
@@ -148,28 +144,25 @@ public class AccountService {
         return new HttpEntity<>(headers);
     }
 
-
-
-    public int findUserId(String username){
+    public User findUser(String input) {
         // Optional functionality to search for userID/account by String
-        String url = API_BASE_URL + ""; // Need to confirm the end point
+        String url = API_BASE_URL + "users/" + input; // Need to confirm the end point
 
-        int userId = 0;
+        User user = null;
 
         try {
-            ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), int.class);
-            userId = response.getBody();
+            ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(), User.class);
+            user = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-
-        return userId;
+        return user;
     }
 
-    private void successOrFail(boolean result){
-        if(result) {
+    private void successOrFail(boolean result) {
+        if (result) {
             System.out.println("\n The transfer was successful.");
-        }else {
+        } else {
             System.out.println("\n The transfer did not complete.");
         }
 

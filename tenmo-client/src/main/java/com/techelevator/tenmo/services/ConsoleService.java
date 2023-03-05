@@ -120,13 +120,17 @@ public class ConsoleService {
         int i = 1;
         System.out.println("\nTransfer History: ");
         for (Transfer transactions : transfersList) {
-            if (currentUserId == acc.findUserId(Integer.toString(transactions.getAccount_from()))) {
-                System.out.printf("%d: You have paid $%d to %d.", i, transactions.getTransferAmount(),
-                        transactions.getAccount_to());
+            if (currentUserId == acc.findUser(Integer.toString(transactions.getAccount_from())).getId()) {
+                User to = acc.findUser(Integer.toString(transactions.getAccount_to()));
+                System.out.printf("%d: You(%d) have paid $%.2f to %s(%d).\n", i, currentUserId,
+                        transactions.getTransferAmount(),
+                        to.getUsername(), to.getId());
                 i++;
             } else {
-                System.out.printf("%d: %d has paid $%d to you.", i, transactions.getAccount_from(),
-                        transactions.getTransferAmount());
+                User from = acc.findUser(Integer.toString(transactions.getAccount_from()));
+                System.out.printf("%d: %s(%d) has paid $%.2f to you(%d).\n", i,
+                        from.getUsername(), from.getId(),
+                        transactions.getTransferAmount(), currentUserId);
                 i++;
             }
             // System.out.println(i + ": " + transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
@@ -145,8 +149,12 @@ public class ConsoleService {
             return;
         }
         for (Transfer pending : pendingList) {
-            System.out.println("The transfer to " + pending.getAccount_to() + " from " +
-                    pending.getAccount_from() + " is Pending.");
+            System.out.printf("The transfer to %s(%d) from %s(%d) for %.2f is Pending.\n",
+                    acc.findUser(Integer.toString(pending.getAccount_to())).getUsername(),
+                    pending.getAccount_to(), acc.findUser(Integer.toString(pending.getAccount_from())).getUsername(),
+                    pending.getAccount_from(), pending.getTransferAmount());
+            // System.out.println("The transfer to " + pending.getAccount_to() + " from " +
+            //         pending.getAccount_from() + " is Pending.");
         }
 
     }
