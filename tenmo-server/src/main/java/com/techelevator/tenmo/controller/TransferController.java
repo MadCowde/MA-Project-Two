@@ -15,7 +15,6 @@ import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.model.Transfer;
 
 @RestController
-//@PreAuthorize("isAuthenticated()")
 @RequestMapping("/transfers")
 public class TransferController {
 
@@ -23,7 +22,6 @@ public class TransferController {
     JdbcAccountDao accDao = new JdbcAccountDao();
     JdbcTransferDao transDao = new JdbcTransferDao();
 
-    //@PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{input}")
     public List<Transfer> get(@PathVariable String input) {
         List<Transfer> trans = transDao.get(input);
@@ -47,22 +45,19 @@ public class TransferController {
 
     @GetMapping("/{input}/pending")
     public List<Transfer> getPending(@PathVariable String input) {
-        List<Transfer> trans = transDao.get(input);
-        for (Transfer t : trans) {
-            if (!(t.getTo() == (accDao.get(input).getUser_Id()))) {
-                trans.remove(t);
-            } else if (!(t.getTo() == (accDao.get(input).getAccount_Id()))) {
-                trans.remove(t);
-            } else if (!(t.getTo() == (userDao.getId(input)))) {
-                trans.remove(t);
-            }
-        }
-        return trans;
+        return transDao.getPending(accDao.get(input));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public boolean remove(@PathVariable int id) {
         return transDao.remove(id);
+    }
+
+    @PutMapping("/{input}/pending/{id}")
+    public boolean setStatus(Transfer trans) {
+        Transfer changed = transDao.get(Integer.toString(trans.getId())).get(0);
+        changed.setStatus(trans.getStatus());
+        return true;
     }
 }

@@ -168,10 +168,17 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     public List<Transfer> getPending(Account acc) {
-        List<Transfer> listing = getAll("Pull");
-        for (Transfer t : listing) {
-            if (!(t.getTo() == acc.getAccount_Id())) {
-                listing.remove(t);
+        List<Transfer> listing = getAll("Fill");
+        for (int i = listing.size() - 1; i >= 0; i--) {
+            if (!(listing.get(i).getTo() == acc.getAccount_Id())) {
+                if (!(listing.get(i).getFrom() == acc.getAccount_Id())) {
+                    listing.remove(i);
+                }
+            }
+            if (!(listing.get(i).getFrom() == acc.getAccount_Id())) {
+                if (!(listing.get(i).getTo() == acc.getAccount_Id())) {
+                    listing.remove(i);
+                }
             }
         }
         return listing;

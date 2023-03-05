@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +45,12 @@ public class AccountController {
             return accDao.create(acc);
         }
         throw new Exception();
+    }
+
+    @PutMapping("/{input}")
+    public boolean setBalance(@RequestBody @Valid Account acc) {
+        Account changed = accDao.get(Integer.toString(acc.getAccount_Id()));
+        changed.setBalance(acc.getBalance());
+        return true;
     }
 }
