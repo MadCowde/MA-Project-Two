@@ -39,9 +39,8 @@ public class User {
         return Objects.hash(id, username);
     }
 
-
     @Override
-    public String toString(){
-        return  "Name= " + username + ", Id= " + id;
+    public String toString() {
+        return "Name= " + username + ", ID= " + id;
     }
 }

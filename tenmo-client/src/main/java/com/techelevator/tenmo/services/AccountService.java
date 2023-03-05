@@ -99,7 +99,7 @@ public class AccountService {
 
         Account receiving = getAccount(sendTo);
         Account sending = getAccount(sentFrom);
-        if (receiving == null && sendTo == sentFrom) {
+        if (receiving == null || sendTo == sentFrom) {
             System.out.println("\nUser you are sending money to doesn't exist");
             return;
         }
@@ -120,7 +120,7 @@ public class AccountService {
     public void requestMoney(int userRequesting, int userRequested, BigDecimal amountToRequest) {
         Account request = getAccount(userRequesting);
         Account requested = getAccount(userRequested);
-        if (requested == null && userRequested == userRequesting) {
+        if (requested == null || userRequested == userRequesting) {
             System.out.println("The user you have selected does not exist.");
             return;
         }

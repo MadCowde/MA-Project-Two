@@ -96,10 +96,15 @@ public class ConsoleService {
                 account.getBalance());
     }
 
-    public void printListOfUsers() {
+    public void printListOfUsers(int currentUserId) {
         User[] users = acc.getAllUsers();
         for (User user : users) {
-            System.out.println(user.toString());
+            if (user.getId() == currentUserId) {
+                continue;
+            } else {
+                System.out.println(user.toString());
+            }
+
         }
 
     }
@@ -108,7 +113,7 @@ public class ConsoleService {
         //Goal of this function is print the Transfer history to the console
         Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         int i = 1;
-        System.out.println("\n\t\t\t\tTransfer History\n#:\tPayer:\t\t\tAmount:\t\tPayee:\t\t\t\tStatus:");
+        System.out.println("\n\t\t\t\tTransfer History\n#:\t\tPayer:\t\t\tAmount:\t\tPayee:\t\t\tStatus:");
         for (Transfer transactions : transfersList) {
             if (currentUserId == acc.findUser(Integer.toString(transactions.getAccount_from())).getId()) {
                 User to = acc.findUser(Integer.toString(transactions.getAccount_to()));
@@ -127,12 +132,12 @@ public class ConsoleService {
             } else {
                 User from = acc.findUser(Integer.toString(transactions.getAccount_from()));
                 if (transactions.getTransferAmount().compareTo(new BigDecimal(1000)) < 0) {
-                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\t\tyou(%d)\t\t%s\n", i,
+                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\t\tYou(%d)\t\t%s\n", i,
                             from.getUsername(), from.getId(),
                             transactions.getTransferAmount(), currentUserId,
                             (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
                 } else {
-                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\tyou(%d)\t\t%s\n", i,
+                    System.out.printf("%d:\t\t%s(%d)\t\t$%.2f\tYou(%d)\t\t%s\n", i,
                             from.getUsername(), from.getId(),
                             transactions.getTransferAmount(), currentUserId,
                             (transactions.getTransfer_status_id() == 2) ? "Approved" : "Rejected");
@@ -154,9 +159,11 @@ public class ConsoleService {
         System.out.println("#:\t\tRecipient:\t\tSender:\t\t\tAmount:\t\tStatus:");
         int i = 1;
         for (Transfer pending : pendingList) {
+            User to = acc.findUser(Integer.toString(pending.getAccount_to()));
+            User from = acc.findUser(Integer.toString(pending.getAccount_from()));
             System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\n", i,
-                    acc.findUser(Integer.toString(pending.getAccount_to())).getUsername(),
-                    pending.getAccount_to(), acc.findUser(Integer.toString(pending.getAccount_from())).getUsername(),
+                    to.getId() == currentUserId ? "You" : to.getUsername(),
+                    pending.getAccount_to(), from.getId() == currentUserId ? "You" : from.getUsername(),
                     pending.getAccount_from(), pending.getTransferAmount());
             i++;
         }
@@ -166,7 +173,7 @@ public class ConsoleService {
     public void sendMoneyRequest(int currentUserId) {
         //Basic functionality : Pull current user ID. Prompt for user to send money to
         System.out.println("\n");
-        printListOfUsers();
+        printListOfUsers(currentUserId);
         int userTo = promptForInt("\nPlease enter the user_id you are sending money to: ");
         int userFrom = currentUserId;
         BigDecimal amount = promptForBigDecimal("How much would you like to send? ");
@@ -176,7 +183,7 @@ public class ConsoleService {
 
     public void requestMoneyFrom(int currentUserId) {
         System.out.println("\n");
-        printListOfUsers();
+        printListOfUsers(currentUserId);
         int userRequesting = currentUserId;
         int userFrom = promptForInt("Please enter the user_id you are requesting money from: ");
         BigDecimal amount = promptForBigDecimal("How much would you like to request? ");
