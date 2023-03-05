@@ -102,7 +102,7 @@ public class ConsoleService {
     public void printCurrentBalance(int userId) {
         //Goal of this method is to use accountservice to return the balance with the user_id.
         Account account = acc.getAccount(userId);
-        System.out.println("The account balance is : " +
+        System.out.println("The account balance is: " +
                 account.getBalance());
     }
 
@@ -120,17 +120,19 @@ public class ConsoleService {
         int i = 1;
         System.out.println("\nTransfer History: ");
         for (Transfer transactions : transfersList) {
-            // if (currentUserId == acc.findUserId(Integer.toString(transactions.getAccount_from()))) {
-            //     System.out.printf("%d: You have paid $%d to %d.", i, transactions.getAccount_to(),
-            //             transactions.getTransferAmount());
-            // } would have to put an Else statement here for when you are the recipient. 
-
-            System.out.println(i + ": " + transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
-                    + " $" + transactions.getTransferAmount());
-            i++;
-
+            if (currentUserId == acc.findUserId(Integer.toString(transactions.getAccount_from()))) {
+                System.out.printf("%d: You have paid $%d to %d.", i, transactions.getTransferAmount(),
+                        transactions.getAccount_to());
+                i++;
+            } else {
+                System.out.printf("%d: %d has paid $%d to you.", i, transactions.getAccount_from(),
+                        transactions.getTransferAmount());
+                i++;
+            }
+            // System.out.println(i + ": " + transactions.getAccount_from() + " has paid " + transactions.getAccount_to()
+            //         + " $" + transactions.getTransferAmount());
+            // i++;
         }
-
     }
 
     public void printPendingRequests(int currentUserId) {
@@ -139,12 +141,12 @@ public class ConsoleService {
         //Need to add logic to be able to get transfer status.
         System.out.println("\nTransfers Pending Approval: \n");
         if (pendingList == null) {
-            System.out.println("There are no pending approvals");
+            System.out.println("There are no pending approvals.");
             return;
         }
         for (Transfer pending : pendingList) {
             System.out.println("The transfer to " + pending.getAccount_to() + " from " +
-                    pending.getAccount_from() + " is Pending");
+                    pending.getAccount_from() + " is Pending.");
         }
 
     }
@@ -164,7 +166,7 @@ public class ConsoleService {
         System.out.println("\n");
         printListOfUsers();
         int userRequesting = currentUserId;
-        int userFrom = promptForInt("Please enter the user_id you are requesting money from ");
+        int userFrom = promptForInt("Please enter the user_id you are requesting money from: ");
         BigDecimal amount = promptForBigDecimal("How much would you like to request? ");
         acc.requestMoney(userRequesting, userFrom, amount);
 
