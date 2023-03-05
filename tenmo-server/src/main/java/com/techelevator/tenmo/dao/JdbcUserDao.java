@@ -105,6 +105,11 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /*
+     * This method creates a user using the username and password given. This also inserts it into
+     * the database if the creation of the object succeeds as well as starts on the creation of an
+     * Account object.
+     */
     @Override
     public boolean create(String username, String password) {
         findAll("Fill");
@@ -144,6 +149,9 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
+    /*
+     * This method removes an account from the database and from the static users ArrayList.
+     */
     public boolean remove(User user) {
         try {
             if (!Objects.isNull(getUser(user.getUsername()))) {
@@ -162,6 +170,10 @@ public class JdbcUserDao implements UserDao {
 
     }
 
+    /*
+     * A helper method for the get method primarily. Is used to distinguish between the options
+     * the user is using.
+     */
     public String inputType(String input) {
         try {
             if (Integer.parseInt(input) / 1000 == 2) {
@@ -177,6 +189,9 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /*
+     * This method is a helper method to allow for quick assignment to an User object from an SqlRowSet.
+     */
     public User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));

@@ -27,6 +27,10 @@ public class JdbcAccountDao implements AccountDao {
         this.jt = new Data().getJdbcTemplate();
     }
 
+    /*
+     * A method that returns an Account object from a multitude of search options. It accepts a String that tells it
+     * what search option is being used. You can use an account ID, user ID, or username to find an account.
+     */
     public Account get(String input) {
         if (Objects.isNull(input) || input.isBlank())
             throw new IllegalArgumentException("invalid input.");
@@ -61,6 +65,9 @@ public class JdbcAccountDao implements AccountDao {
 
     }
 
+    /*
+     * Creates an account from scratch with its user ID as its input.
+     */
     @Override
     public boolean create(int newUserId) {
         String sql = "INSERT INTO account (user_id, balance) values (?, ?);";
@@ -73,6 +80,9 @@ public class JdbcAccountDao implements AccountDao {
         return true;
     }
 
+    /*
+     * Creates an account using the account that's sent through the input.
+     */
     @Override
     public Account create(Account acc) {
         String sql = "INSERT INTO account (user_id, balance) values (?, ?) RETURNING account_id;";
@@ -86,6 +96,10 @@ public class JdbcAccountDao implements AccountDao {
         return acc;
     }
 
+    /*
+     * A helper method for the get method primarily. Is used to distinguish between the options
+     * the user is using.
+     */
     public String inputType(String input) {
         try {
             if (Integer.parseInt(input) / 1000 == 2) {
@@ -101,6 +115,9 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /*
+     * This method sends a list of all Accounts that are currently made.
+     */
     @Override
     public List<Account> listAll() {
         List<Account> acc = new ArrayList<>();
@@ -113,12 +130,18 @@ public class JdbcAccountDao implements AccountDao {
         return acc;
     }
 
+    /*
+     * This method is a helper method to allow for quick assignment to an Account object from an SqlRowSet.
+     */
     private Account mapRowToAccount(SqlRowSet result) {
         Account account = new Account(result.getInt("account_id"), result.getInt("user_id"),
                 result.getBigDecimal("balance"));
         return account;
     }
 
+    /*
+     * This is a method that allows for the change in balance for an account.
+     */
     public boolean setBalance(Account acc) {
         String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
         jt.update(sql, acc.getBalance(), acc.getAccount_Id());

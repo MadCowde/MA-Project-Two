@@ -37,3 +37,4 @@
 2023-03-04T23:02:15.5860724 401 : [{"timestamp":"2023-03-05T04:02:15.560+00:00","status":401,"error":"Unauthorized","message":"The User ID: 1005 was not found.","path":"/accounts/1005"}]
 2023-03-04T23:05:22.951534 401 : [{"timestamp":"2023-03-05T04:05:22.936+00:00","status":401,"error":"Unauthorized","message":"The User ID: 1005 was not found.","path":"/accounts/1005"}]
 2023-03-04T23:05:53.903274 401 : [{"timestamp":"2023-03-05T04:05:53.887+00:00","status":401,"error":"Unauthorized","message":"The User ID: 1005 was not found.","path":"/accounts/1005"}]
+2023-03-04T23:53:02.0121902 401 : [{"timestamp":"2023-03-05T04:53:01.995+00:00","status":401,"error":"Unauthorized","message":"The User ID: 1005 was not found.","path":"/accounts/1005"}]

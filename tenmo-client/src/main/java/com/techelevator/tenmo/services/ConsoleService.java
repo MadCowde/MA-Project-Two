@@ -156,15 +156,15 @@ public class ConsoleService {
             System.out.println("There are no pending approvals.");
             return;
         }
-        System.out.println("#:\t\tRecipient:\t\tSender:\t\t\tAmount:\t\tStatus:");
+        System.out.println("#:\t\tRecipient:\t\tSender:\t\t\tAmount:\t\tStatus:\t\tID:");
         int i = 1;
         for (Transfer pending : pendingList) {
             User to = acc.findUser(Integer.toString(pending.getAccount_to()));
             User from = acc.findUser(Integer.toString(pending.getAccount_from()));
-            System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\n", i,
+            System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\t\t%d\n", i,
                     to.getId() == currentUserId ? "You" : to.getUsername(),
                     pending.getAccount_to(), from.getId() == currentUserId ? "You" : from.getUsername(),
-                    pending.getAccount_from(), pending.getTransferAmount());
+                    pending.getAccount_from(), pending.getTransferAmount(), pending.getTransfer_id());
             i++;
         }
 
