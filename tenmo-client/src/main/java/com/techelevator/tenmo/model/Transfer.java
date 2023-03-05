@@ -21,6 +21,24 @@ public class Transfer {
     public Transfer(){};
 
     public Transfer(int transfer_type_id, int account_from, int account_to, BigDecimal transferAmount){
+        this.transfer_id = transfer_id;
+        this.transfer_type_id = transfer_type_id;
+        this.account_from = account_from;
+        this.account_to = account_to;
+        this.transferAmount = transferAmount;
+        switch (transfer_type_id) {
+            case (1):
+                this.transfer_status_id = 1;
+                break;
+            case (2):
+                this.transfer_status_id = 2;
+                break;
+            default:
+                this.transfer_status_id = 0;
+        }
+    }
+    public Transfer(int transfer_id, int transfer_type_id, int account_from, int account_to, BigDecimal transferAmount){
+        this.transfer_id = transfer_id;
         this.transfer_type_id = transfer_type_id;
         this.account_from = account_from;
         this.account_to = account_to;
@@ -91,5 +109,10 @@ public class Transfer {
 
     public void setTransferAmount(BigDecimal transferAmount) {
         this.transferAmount = transferAmount;
+    }
+
+    public String toString(){
+        return "TransferId= " + transfer_id + ", TransferStatus= " + transfer_status_id + ", TransferType= "
+                + transfer_type_id;
     }
 }

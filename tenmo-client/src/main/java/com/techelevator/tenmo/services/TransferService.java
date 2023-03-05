@@ -6,9 +6,7 @@ import com.techelevator.tenmo.model.TransferStatus;
 import com.techelevator.tenmo.model.TransferType;
 import com.techelevator.util.BasicLogger;
 import io.cucumber.core.resource.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +24,8 @@ public class TransferService {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
+
+
 
 
     public boolean postTransferRequest(Transfer newTransfer){
@@ -58,6 +58,21 @@ public class TransferService {
         } catch (ResourceAccessException ex){
         BasicLogger.log(ex.getMessage());
          }
+
+    }
+
+    public void updateTransfer(Transfer transfer){
+
+        HttpEntity<Object> entity = makeEntity(transfer);
+
+        try{
+            restTemplate.put(API_BASE_URL + "transfers/" + transfer.getTransfer_id(), entity);
+
+        } catch (RestClientResponseException ex){
+            BasicLogger.log(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex){
+            BasicLogger.log(ex.getMessage());
+        }
 
     }
 

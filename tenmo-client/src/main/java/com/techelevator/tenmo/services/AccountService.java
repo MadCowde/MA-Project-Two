@@ -39,6 +39,22 @@ public class AccountService {
         return account;
 
     }
+    public Transfer getTransfer(int transferId){
+        Transfer transfer = null;
+        String url = API_BASE_URL + "transfers/" + transferId;
+
+        try {
+            ResponseEntity<Transfer> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
+                    Transfer.class);
+            transfer = response.getBody();
+
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+        return transfer;
+    }
+
 
     public User[] getAllUsers() {
         User[] listOfUsers = null;
@@ -134,6 +150,28 @@ public class AccountService {
             System.out.println("Invalid input. The value must be positive");
         }
 
+    }
+
+    public void acceptPendingRequest(Transfer transferToAcceptDecline, String isYesNo){
+        boolean isAccepted = false;
+
+        if (isYesNo.equalsIgnoreCase("Yes") || isYesNo.equalsIgnoreCase("Y")){
+            isAccepted = true;
+            transferToAcceptDecline.setTransfer_status_id(2);
+            transferService.updateTransfer(transferToAcceptDecline);
+            Account receive = getAccount(transferToAcceptDecline.getAccount_to());
+            Account send = getAccount(transferToAcceptDecline.getAccount_from());
+            transferService.processTransfer(receive, send,
+                    transferToAcceptDecline.getTransferAmount(), isAccepted);
+
+        } else if (isYesNo.equalsIgnoreCase("No") || isYesNo.equalsIgnoreCase("N")) {
+            transferToAcceptDecline.setTransfer_status_id(3);
+            transferService.updateTransfer(transferToAcceptDecline);
+        }else {
+            System.out.println("The input was invalid. Please accept with (Y/N). Y = Yes | N = No");
+        }
+
+        successOrFail(isAccepted);
     }
 
     private HttpEntity<Void> makeAuthEntity() {
