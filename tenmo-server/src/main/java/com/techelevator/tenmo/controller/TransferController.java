@@ -23,15 +23,15 @@ public class TransferController {
     JdbcTransferDao transDao = new JdbcTransferDao();
 
     @GetMapping("/{input}")
-    public Transfer get(@PathVariable String input) {
+    public Transfer[] get(@PathVariable String input) {
         List<Transfer> trans = transDao.get(input);
-        return trans.get(0);
+        return (Transfer[]) trans.toArray(new Transfer[trans.size()]);
     }
 
     @GetMapping("")
-    public List<Transfer> allAccounts() {
-        List<Transfer> all = transDao.getAll("Fill");
-        return all;
+    public Transfer[] allAccounts() {
+        List<Transfer> all = transDao.getAll();
+        return all.toArray(new Transfer[all.size()]);
     }
 
     @PostMapping("")
@@ -44,8 +44,9 @@ public class TransferController {
     }
 
     @GetMapping("/{input}/pending")
-    public List<Transfer> getPending(@PathVariable String input) {
-        return transDao.getPending(accDao.get(input));
+    public Transfer[] getPending(@PathVariable String input) {
+        List<Transfer> trans = transDao.getPending(accDao.get(input));
+        return trans.toArray(new Transfer[trans.size()]);
     }
 
     @DeleteMapping("/{id}")
@@ -61,7 +62,8 @@ public class TransferController {
     }
 
     @GetMapping("/{input}/completed")
-    public List<Transfer> getFinished(@PathVariable String input) {
-        return transDao.getFinished(accDao.get(input));
+    public Transfer[] getFinished(@PathVariable String input) {
+        List<Transfer> trans = transDao.getFinished(accDao.get(input));
+        return trans.toArray(new Transfer[trans.size()]);
     }
 }

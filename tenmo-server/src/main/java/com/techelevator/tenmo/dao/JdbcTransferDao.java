@@ -31,34 +31,27 @@ public class JdbcTransferDao implements TransferDao {
      * every transfer made.
      */
     @Override
-    public List<Transfer> getAll(String input) {
+    public List<Transfer> getAll() {
         boolean isEqual = false;
-        switch (input) {
-            case ("Fill"):
-                String sql = "SELECT * FROM transfer";
-                SqlRowSet results = jt.queryForRowSet(sql);
-                while (results.next()) {
-                    Transfer transfer = mapRowToTransfer(results);
-                    for (Transfer t : transfers) {
-                        if (t.equals(transfer)) {
-                            isEqual = true;
-                            break;
-                        } else {
-                            isEqual = false;
-                        }
-                    }
-                    if (isEqual) {
-                        continue;
-                    } else {
-                        transfers.add(transfer);
-                    }
+        String sql = "SELECT * FROM transfer";
+        SqlRowSet results = jt.queryForRowSet(sql);
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            for (Transfer t : transfers) {
+                if (t.equals(transfer)) {
+                    isEqual = true;
+                    break;
+                } else {
+                    isEqual = false;
                 }
-                return transfers;
-            case ("Pull"):
-                return transfers;
-            default:
-                return transfers;
+            }
+            if (isEqual) {
+                continue;
+            } else {
+                transfers.add(transfer);
+            }
         }
+        return transfers;
     }
 
     /*
@@ -192,22 +185,24 @@ public class JdbcTransferDao implements TransferDao {
      * This method returns a list of all pending transactions.
      */
     public List<Transfer> getPending(Account acc) {
-        List<Transfer> listing = getAll("Fill");
+        List<Transfer> listing = getAll();
         for (int i = listing.size() - 1; i >= 0; i--) {
             if (listing.get(i).getTo() == acc.getAccount_Id()) {
             } else if (listing.get(i).getFrom() == acc.getAccount_Id()) {
             } else {
                 listing.remove(i);
+                continue;
             }
             if (listing.get(i).getStatus() == 2 || listing.get(i).getStatus() == 3) {
                 listing.remove(i);
+                continue;
             }
         }
         return listing;
     }
 
     /*
-     * This method removes a transaction from the database and list of all transfers.
+     * This method removes a transaction from the database and the list of all transfers.
      */
     public boolean remove(int id) {
         Transfer trans = get(Integer.toString(id)).get(0);
@@ -226,6 +221,11 @@ public class JdbcTransferDao implements TransferDao {
     public boolean setStatus(Transfer trans) {
         String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
         jt.update(sql, trans.getStatus(), trans.getId());
+        for (Transfer t : transfers) {
+            if (t.getId() == trans.getId()) {
+                t.setStatus(trans.getStatus());
+            }
+        }
         return true;
     }
 
@@ -233,7 +233,7 @@ public class JdbcTransferDao implements TransferDao {
      * This method returns a list of all the finished transactions (no longer pending).
      */
     public List<Transfer> getFinished(Account acc) {
-        List<Transfer> listing = getAll("Fill");
+        List<Transfer> listing = getAll();
         for (int i = listing.size() - 1; i >= 0; i--) {
             if (listing.get(i).getStatus() == 3 || listing.get(i).getStatus() == 2) {
                 if (listing.get(i).getTo() == acc.getAccount_Id()) {

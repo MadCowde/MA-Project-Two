@@ -6,7 +6,7 @@ import com.techelevator.tenmo.model.Transfer;
 
 public interface TransferDao {
 
-    List<Transfer> getAll(String input);
+    List<Transfer> getAll();
 
     List<Transfer> get(String input);
 

@@ -21,7 +21,7 @@ public class Transfer {
     JdbcTransferDao transDao = new JdbcTransferDao();
 
     public Transfer(int type, int from, int to, BigDecimal amount) {
-        this.id = id;
+        this.id = 0;
         this.from = from;
         this.to = to;
         this.amount = amount;

@@ -165,20 +165,17 @@ public class ConsoleService {
         for (Transfer pending : pendingList) {
             User to = acc.findUser(Integer.toString(pending.getAccountTo()));
             User from = acc.findUser(Integer.toString(pending.getAccountFrom()));
-            System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\tPending\t\t%d\n", i,
+            System.out.printf("%d:\t\t%s(%d)\t\t%s(%d)\t\t%.2f\t\t%s\t\t%d\n", i,
                     to.getId() == currentUserId ? "You" : to.getUsername(),
                     pending.getAccountTo(), from.getId() == currentUserId ? "You" : from.getUsername(),
-                    pending.getAccountFrom(), pending.getTransferAmount(), pending.getTransferId());
+                    pending.getAccountFrom(), pending.getTransferAmount(),
+                    (pending.getTransferStatusId() == 1 ? "Pending"
+                            : pending.getTransferStatusId() == 2 ? "Approved" : "Rejected"),
+                    pending.getTransferId());
             i++;
         }
         promptToAcceptPendingRequests(currentUserId);
     }
-
-
-
-
-
-
 
     public void sendMoneyRequest(int currentUserId) {
         //Basic functionality : Pull current user ID. Prompt for user to send money to
@@ -201,14 +198,36 @@ public class ConsoleService {
 
     }
 
-    public void promptToAcceptPendingRequests(int currentUserId){
-        String grabTransfer = promptForString("Please select a ID to approve or reject an incoming request. ");
-        System.out.println();
-        Transfer transferToAcceptDecline = acc.getTransfer(grabTransfer);
-        String isYesNo = promptForString("Please accept or decline the request for money (Y/N)");
-        acc.acceptPendingRequest(transferToAcceptDecline, isYesNo, currentUserId);
-
+    public void promptToAcceptPendingRequests(int currentUserId) {
+        boolean hasOne = false;
+        try {
+            Transfer[] allForUser = acc.getTransfer(Integer.toString(currentUserId));
+            for (Transfer t : allForUser) {
+                if ((t.getAccountTo() == acc.getAccount(currentUserId).getAccountId() || t.getAccountFrom() == acc
+                        .getAccount(currentUserId).getAccountId()) && t.getTransferStatusId() == 1) {
+                    hasOne = true;
+                    break;
+                }
+            }
+            if (hasOne) {
+                String grabTransfer = promptForString(
+                        "Please select a transaction ID to approve or reject an incoming request. ");
+                System.out.println();
+                Transfer[] transfers = acc.getTransfer(grabTransfer);
+                try {
+                    Transfer transferToAcceptDecline = transfers[0];
+                    String isYesNo = promptForString("Please accept, decline, or ignore the request for money (Y/N/I)");
+                    acc.acceptPendingRequest(transferToAcceptDecline, isYesNo, currentUserId);
+                } catch (NullPointerException n) {
+                    System.out.println("No such transaction ID has been made.");
+                }
+            } else {
+                System.out.println("\n\t\t\t\tThere are no transactions pending approval.");
+                return;
+            }
+        } catch (NullPointerException e) {
+            System.out.println("\n\t\t\t\tThere are no transactions pending approval.");
+            return;
+        }
     }
-
-
 }

@@ -18,10 +18,11 @@ public class Transfer {
     @JsonProperty("amount")
     private BigDecimal transferAmount;
 
-    public Transfer(){};
+    public Transfer() {
+    };
 
-    public Transfer(int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount){
-        this.transferId = transferId;
+    public Transfer(int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount) {
+        this.transferId = 0;
         this.transferTypeId = transferTypeId;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
@@ -37,7 +38,8 @@ public class Transfer {
                 this.transferStatusId = 3;
         }
     }
-    public Transfer(int transferIdd, int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount){
+
+    public Transfer(int transferIdd, int transferTypeId, int accountFrom, int accountTo, BigDecimal transferAmount) {
         this.transferId = transferTypeId;
         this.transferTypeId = transferTypeId;
         this.transferStatusId = transferStatusId;
@@ -45,10 +47,9 @@ public class Transfer {
         this.accountTo = accountTo;
         this.transferAmount = transferAmount;
 
-
     }
 
-  /*  public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal transferAmount) {
+    /*  public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal transferAmount) {
         this.transfer_type_id = transfer_type_id;
         this.transfer_status_id = transfer_status_id;
         this.account_from = account_from;
@@ -104,7 +105,7 @@ public class Transfer {
         this.transferAmount = transferAmount;
     }
 
-    public String toString(){
+    public String toString() {
         return "TransferId= " + transferId + ", TransferStatus= " + transferStatusId + ", TransferType= "
                 + transferTypeId;
     }

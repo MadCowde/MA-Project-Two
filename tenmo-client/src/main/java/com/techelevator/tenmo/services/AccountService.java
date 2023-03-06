@@ -28,9 +28,7 @@ public class AccountService {
         String url = API_BASE_URL + "accounts/" + userId;
 
         try {
-            ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
-                    Account.class);
-            account = response.getBody();
+            account = restTemplate.getForObject(url, Account.class);
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
@@ -39,14 +37,13 @@ public class AccountService {
         return account;
 
     }
-    public Transfer getTransfer(String transferId){
-        Transfer transfer = null;
+
+    public Transfer[] getTransfer(String transferId) {
+        Transfer[] transfer = null;
         String url = API_BASE_URL + "transfers/" + transferId;
 
         try {
-            ResponseEntity<Transfer> response = restTemplate.exchange(url, HttpMethod.GET, makeAuthEntity(),
-                    Transfer.class);
-            transfer = response.getBody();
+            transfer = restTemplate.getForObject(url, Transfer[].class);
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
@@ -55,15 +52,12 @@ public class AccountService {
         return transfer;
     }
 
-
     public User[] getAllUsers() {
         User[] listOfUsers = null;
         String url = API_BASE_URL + "users";
 
         try {
-            ResponseEntity<User[]> response = restTemplate.exchange(url,
-                    HttpMethod.GET, makeAuthEntity(), User[].class);
-            listOfUsers = response.getBody();
+            listOfUsers = restTemplate.getForObject(url, User[].class);
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
@@ -76,12 +70,7 @@ public class AccountService {
         String url = API_BASE_URL + "transfers/" + currentUserId + "/completed"; // Need to confirm the end point to pull the data.
 
         try {
-            ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    Transfer[].class);
-
-            history = response.getBody();
+            history = restTemplate.getForObject(url, Transfer[].class);
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
@@ -98,12 +87,8 @@ public class AccountService {
         String url = API_BASE_URL + "transfers/" + account.getAccountId() + "/pending"; //Need to confirm the end point to get
 
         try {
-            ResponseEntity<Transfer[]> response = restTemplate.exchange(url,
-                    HttpMethod.GET,
-                    makeAuthEntity(),
+            pending = restTemplate.getForObject(url,
                     Transfer[].class);
-
-            pending = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
@@ -152,32 +137,36 @@ public class AccountService {
 
     }
 
-    public void acceptPendingRequest(Transfer transferToAcceptDecline, String isYesNo, int currentUserId){
+    public void acceptPendingRequest(Transfer transferToAcceptDecline, String isYesNo, int currentUserId) {
         boolean isAccepted = false;
-        if (transferToAcceptDecline == null){
+        if (transferToAcceptDecline == null) {
             System.out.println("This is not a valid transfer request. Please check the ID");
             return;
         }
 
-        if (isYesNo.equalsIgnoreCase("Yes") || isYesNo.equalsIgnoreCase("Y")){
+        if (isYesNo.equalsIgnoreCase("Yes") || isYesNo.equalsIgnoreCase("Y")) {
             transferToAcceptDecline.setTransferStatusId(2);
-            transferService.updateTransfer(transferToAcceptDecline);
             Account receive = getAccount(transferToAcceptDecline.getAccountTo());
             Account send = getAccount(transferToAcceptDecline.getAccountFrom());
-            if(currentUserId != send.getUserId()){
+            if (currentUserId != send.getUserId()) {
                 isAccepted = true;
+                transferService.updateTransfer(transferToAcceptDecline);
             }
             transferService.processTransfer(receive, send,
                     transferToAcceptDecline.getTransferAmount(), isAccepted);
-
         } else if (isYesNo.equalsIgnoreCase("No") || isYesNo.equalsIgnoreCase("N")) {
             transferToAcceptDecline.setTransferStatusId(3);
             transferService.updateTransfer(transferToAcceptDecline);
-        }else {
-            System.out.println("The input was invalid. Please accept with (Y/N). Y = Yes | N = No");
+        } else if (isYesNo.equalsIgnoreCase("Ignore") || isYesNo.equalsIgnoreCase("I")) {
+            return;
+        } else {
+            System.out.println("The input was invalid. Please accept with (Y/N/I). Y = Yes | N = No | I = Ignore");
         }
-
-        successOrFail(isAccepted);
+        if (isAccepted) {
+            System.out.printf("Transaction #%d was accepted!", transferToAcceptDecline.getTransferId());
+        } else {
+            System.out.printf("Transaction #%d was rejected.", transferToAcceptDecline.getTransferId());
+        }
     }
 
     private HttpEntity<Void> makeAuthEntity() {
