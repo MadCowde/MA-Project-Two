@@ -100,7 +100,7 @@ public class ConsoleService {
     public void printCurrentBalance(int userId) {
         //Goal of this method is to use accountservice to return the balance with the user_id.
         Account account = acc.getAccount(userId);
-        System.out.println("The account balance is: " +
+        System.out.println("\nYour account balance is: " +
                 account.getBalance());
     }
 
@@ -121,7 +121,7 @@ public class ConsoleService {
         //Goal of this function is print the Transfer history to the console
         Transfer[] transfersList = acc.getTransferHistory(currentUserId);
         int i = 1;
-        System.out.println("\n\t\t\t\tTransfer History\n#:\t\tPayer:\t\t\tAmount:\t\tPayee:\t\t\tStatus:\t\t\tID:");
+        System.out.println("\n\t\t\t\t\t\tTransfer History\n#:\t\tPayer:\t\t\tAmount:\t\tPayee:\t\t\tStatus:\t\t\tID:");
         for (Transfer transactions : transfersList) {
             if (currentUserId == acc.findUser(Integer.toString(transactions.getAccountFrom())).getId()) {
                 User to = acc.findUser(Integer.toString(transactions.getAccountTo()));
@@ -163,7 +163,7 @@ public class ConsoleService {
         //Goal of this function is print the pending requests to the console
         Transfer[] pendingList = acc.getPendingRequests(currentUserId);
         //Need to add logic to be able to get transfer status.
-        System.out.println("\n\t\t\tTransfers Pending Approval");
+        System.out.println("\n\t\t\t\t\tTransfers Pending Approval");
         if (pendingList == null) {
             System.out.println("There are no pending approvals.");
             return;
