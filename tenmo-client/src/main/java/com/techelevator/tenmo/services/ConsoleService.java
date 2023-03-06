@@ -48,7 +48,15 @@ public class ConsoleService {
     }
 
     public UserCredentials promptForCredentials() {
-        String username = promptForString("Username: ");
+        String username = "1";
+        while (true) {
+            username = promptForString("Username: ");
+            if (Character.isDigit(username.charAt(0))) {
+                System.out.println("Username must not start with a number. Please try again.");
+            } else {
+                break;
+            }
+        }
         String password = promptForString("Password: ");
         return new UserCredentials(username, password);
     }
